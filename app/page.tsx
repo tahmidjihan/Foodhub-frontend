@@ -1,16 +1,14 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Categories from "./components/Categories";
-import FeatureGrid from "./components/FeatureGrid";
-import KitchenSignup from "./components/KitchenSignup";
-import Footer from "./components/Footer";
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import FeatureGrid from './components/FeatureGrid';
+import KitchenSignup from './components/KitchenSignup';
+import Footer from './components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className='dark min-h-screen bg-background text-foreground'>
       <Navbar />
       <Hero />
-      <Categories />
       <FeatureGrid />
       <KitchenSignup />
       <Footer />
