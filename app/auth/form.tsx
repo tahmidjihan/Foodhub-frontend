@@ -20,7 +20,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
   const session = useAuth();
   useEffect(() => {
     if (session?.data?.user) {
-      redirect('/');
+      redirect('/dashboard');
     }
   });
   const {

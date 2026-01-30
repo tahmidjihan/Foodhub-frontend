@@ -44,17 +44,17 @@ const data = {
   projects: [
     {
       name: 'Dashboard',
-      url: '#',
+      url: '/dashboard',
       icon: Frame,
     },
     {
       name: 'Meals',
-      url: '#',
+      url: '/dashboard/meals',
       icon: PieChart,
     },
     {
       name: 'Providers',
-      url: '#',
+      url: '/dashboard/providers',
       icon: Map,
     },
   ],
