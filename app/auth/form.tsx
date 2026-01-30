@@ -1,12 +1,13 @@
 'use client';
-import React, { JSX, SVGProps } from 'react';
+import React, { JSX, SVGProps, use, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { authClient, signIn, signUp } from './auth';
-import { string } from 'better-auth';
+import { authClient } from './auth';
+import { redirect } from 'next/navigation';
+import { useAuth } from './useAuth';
 type Inputs = {
   name?: string;
   email: string;
@@ -16,6 +17,12 @@ type Inputs = {
 interface Props {}
 
 function Form({ isLogin }: { isLogin?: boolean }) {
+  const session = useAuth();
+  useEffect(() => {
+    if (session?.data?.user) {
+      redirect('/');
+    }
+  });
   const {
     register,
     handleSubmit,
@@ -24,12 +31,20 @@ function Form({ isLogin }: { isLogin?: boolean }) {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { name = 'Unknown', email, password } = data;
     if (isLogin) {
-      const { data: session, error } = await signIn.email({
+      const { data: session, error } = await authClient.signIn.email({
         email,
         password,
         callbackURL: 'http://localhost:5000/',
         rememberMe: true,
       });
+      if (error) {
+        console.log('Error signing in:', error);
+      } else {
+        console.log('User signed in successfully:', session);
+        setTimeout(() => {
+          redirect('/');
+        }, 1000);
+      }
     } else {
       const { data, error } = await authClient.signUp.email(
         {
@@ -42,6 +57,9 @@ function Form({ isLogin }: { isLogin?: boolean }) {
           onRequest: (ctx) => {},
           onSuccess: (ctx) => {
             console.log('User signed up successfully:', ctx.data);
+            setTimeout(() => {
+              redirect('/');
+            }, 1000);
           },
           onError: (ctx) => {
             // alert(ctx.error.message);

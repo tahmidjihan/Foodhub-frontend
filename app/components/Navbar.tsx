@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import { useAuth } from '../auth/useAuth';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const session = useAuth();
+  console.log(session);
 
   useEffect(() => {
     const handleScroll = () => {

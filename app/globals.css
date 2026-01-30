@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -12,20 +12,12 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   overflow-x: hidden;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.dark .glass {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .text-gradient {
@@ -34,13 +26,13 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.btn-primary {
+/* .btn-primary {
   @apply bg-primary hover:bg-primary-light text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg active:scale-95;
-}
+} */
 
-.btn-secondary {
+/* .btn-secondary {
   @apply bg-white dark:bg-slate-800 border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md active:scale-95;
-}
+} */
 
 .card-hover {
   @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-2;
