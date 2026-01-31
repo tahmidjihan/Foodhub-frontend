@@ -13,6 +13,10 @@ import {
   Settings2,
   SquareTerminal,
   ShoppingBag,
+  User,
+  Shield,
+  Users,
+  FileText,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -100,6 +104,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       role: 'Provider',
     },
   ];
+  const adminItems = [
+    {
+      name: 'Manage Users',
+      url: '/dashboard/admin/users',
+      icon: Users,
+      role: 'Admin',
+    },
+    {
+      name: 'Manage Orders',
+      url: '/dashboard/admin/orders',
+      icon: FileText,
+      role: 'Admin',
+    },
+  ];
   // @ts-ignore
   const role = session.data?.user?.role;
   return (
@@ -110,9 +128,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         {role == 'User' && <NavItems items={userItems} />}
         {role == 'Provider' && <NavItems items={providerItems} />}
+        {role == 'Admin' && <NavItems items={adminItems} />}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
