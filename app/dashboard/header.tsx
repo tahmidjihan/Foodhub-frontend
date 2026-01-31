@@ -26,7 +26,7 @@ function Header(props: Props) {
   return (
     <header className='flex h-16 dark shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>
       <div className='flex items-center gap-2 px-4'>
-        <SidebarTrigger className='-ml-1' />
+        <SidebarTrigger className='-ml-1 text-white' />
         <Separator
           orientation='vertical'
           className='mr-2 data-[orientation=vertical]:h-4'
@@ -34,13 +34,7 @@ function Header(props: Props) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className='hidden md:block'>
-              <BreadcrumbLink href='#'>
-                Building Your Application
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className='hidden md:block' />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+              <BreadcrumbLink href='#'>Order food with foodHub</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

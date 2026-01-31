@@ -17,6 +17,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Badge } from 'lucide-react';
+import MealCard from './mealCard';
 
 interface Props {}
 
@@ -24,7 +25,7 @@ async function Page(props: Props) {
   // const {} = props;
   const pagination = { skip: 0, take: 10 };
   const data = await fetch(
-    `${process.env.BACKEND}/api/meals?skip=${pagination.skip}&take=${pagination.take}`,
+    `${process.env.NEXT_PUBLIC_BACKEND}/api/meals?skip=${pagination.skip}&take=${pagination.take}`,
   ).then((res) => res.json());
   //   console.log(data);
   return (
@@ -35,24 +36,7 @@ async function Page(props: Props) {
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           {data.map((item: any) => (
-            <Card
-              key={item.id}
-              className='relative mx-auto w-full max-w-sm pt-0'
-            >
-              <div className='absolute inset-0 z-30 aspect-video bg-black/35' />
-              <img
-                src={item.image}
-                alt='Event cover'
-                className='relative rounded-t-md z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40'
-              />
-              <CardHeader>
-                <CardTitle>{item.name}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Button className='w-full'>Order Now</Button>
-              </CardFooter>
-            </Card>
+            <MealCard key={item.id} item={item} />
           ))}
         </div>
         <div className='bg-orange-500 rounded-md py-2 flex items-center justify-center'>

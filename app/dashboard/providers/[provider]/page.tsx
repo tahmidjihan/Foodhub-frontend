@@ -1,5 +1,4 @@
 import React from 'react';
-import Cards from './cards';
 // import {
 //   Pagination,
 //   PaginationContent,
@@ -17,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import MealCard from '../../meals/mealCard';
 interface Props {}
 
 async function Page({ params, searchParams }: any) {
@@ -24,7 +24,9 @@ async function Page({ params, searchParams }: any) {
   const provider = await param.provider;
   console.log(provider);
   // const pagination = { skip: 0, take: 10 };
-  const data = await fetch(`${process.env.BACKEND}/api/providers/${provider}`)
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/${provider}`,
+  )
     .then((res) => res.json())
     .catch((error) => console.error(error));
   // const data = [
@@ -51,7 +53,6 @@ async function Page({ params, searchParams }: any) {
   // ];
   return (
     <>
-      <Cards data={data.meals} />
       <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
         <div>
           <h1 className='text-3xl font-bold text-neutral-50'>
@@ -60,24 +61,7 @@ async function Page({ params, searchParams }: any) {
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           {data.meals.map((item: any) => (
-            <Card
-              key={item.id}
-              className='relative mx-auto w-full max-w-sm pt-0'
-            >
-              <div className='absolute inset-0 z-30 aspect-video bg-black/35' />
-              <img
-                src={item.image}
-                alt='Event cover'
-                className='relative rounded-t-md z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40'
-              />
-              <CardHeader>
-                <CardTitle>{item.name}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Button className='w-full'>Order Now</Button>
-              </CardFooter>
-            </Card>
+            <MealCard key={item.id} item={item} />
           ))}
         </div>
       </div>

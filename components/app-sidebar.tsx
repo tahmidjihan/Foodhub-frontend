@@ -57,6 +57,11 @@ const data = {
       url: '/dashboard/providers',
       icon: Map,
     },
+    {
+      name: 'cart',
+      url: '/dashboard/cart',
+      icon: BookOpen,
+    },
   ],
 };
 

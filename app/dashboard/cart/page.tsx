@@ -4,8 +4,6 @@ import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,16 +18,21 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import TR from './tableRow';
 
 interface Props {}
 
 async function Page(props: Props) {
   const {} = props;
-  const pagination = { skip: 0, take: 10 };
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND}/api/providers?skip=${pagination.skip}&take=${pagination.take}`,
-  ).then((res) => res.json());
-  //   console.log(data);
+  const cookieStore = await cookies();
+  //   const pagination = { skip: 0, take: 10 };
+  const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
+    headers: {
+      cookie: cookieStore.toString(),
+    },
+  }).then((res) => res.json());
+  console.log(data);
   return (
     <>
       <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
@@ -37,26 +40,21 @@ async function Page(props: Props) {
           <h1 className='text-3xl font-bold text-neutral-50'>Providers</h1>
         </div>
         <Table>
-          <TableCaption>A list of Providers.</TableCaption>
+          <TableCaption>A list of meals in your cart.</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className='w-[100px]'>Name</TableHead>
+              <TableHead className='w-[100px]'>Order Now</TableHead>
+              <TableHead className='w-[50px]'>Order Now</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.map((item: any) => (
-              <TableRow key={item.id}>
-                <TableCell className='font-medium  text-white'>
-                  <Link href={`/dashboard/providers/${item.id}`}>
-                    {item.name}
-                  </Link>
-                  {/* {item.name} */}
-                </TableCell>
-              </TableRow>
+              <TR key={item.id} item={item} />
             ))}
           </TableBody>
         </Table>
-        <div className='bg-orange-500 rounded-md py-2 flex items-center justify-center'>
+        {/* <div className='bg-orange-500 rounded-md py-2 flex items-center justify-center'>
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -83,7 +81,7 @@ async function Page(props: Props) {
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-        </div>
+        </div> */}
       </div>
     </>
   );
