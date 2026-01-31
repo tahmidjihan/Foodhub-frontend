@@ -19,40 +19,23 @@ import {
 import MealCard from '../../meals/mealCard';
 interface Props {}
 
-async function Page({ params, searchParams }: any) {
-  const param = await params;
-  const provider = await param.provider;
+async function Page({ params }: { params: { providerId: string } }) {
+  const resolvedParams = await params;
+  const provider = resolvedParams.providerId;
   console.log(provider);
   // const pagination = { skip: 0, take: 10 };
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/${provider}`,
+    `${process.env.NEXT_PUBLIC_BACKEND}/api/meals/provider/${provider}`,
   )
-    .then((res) => res.json())
+    .then((res) => {
+      const body = res.json();
+      console.log(body);
+      return body;
+    })
     .catch((error) => console.error(error));
-  // const data = [
-  //   {
-  //     id: 1,
-  //     name: 'Provider 1',
-  //     description: 'Description 1',
-  //     image: 'https://via.placeholder.com/150',
-  //     meals: [
-  //       {
-  //         id: 1,
-  //         name: 'Meal 1',
-  //         description: 'Description 1',
-  //         image: 'https://via.placeholder.com/150',
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Meal 2',
-  //         description: 'Description 2',
-  //         image: 'https://via.placeholder.com/150',
-  //       },
-  //     ],
-  //   },
-  // ];
+
   return (
-    <>
+    <div className='bg-black min-h-screen'>
       <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
         <div>
           <h1 className='text-3xl font-bold text-neutral-50'>
@@ -60,7 +43,7 @@ async function Page({ params, searchParams }: any) {
           </h1>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {data.meals.map((item: any) => (
+          {data.map((item: any) => (
             <MealCard key={item.id} item={item} />
           ))}
         </div>
@@ -93,7 +76,7 @@ async function Page({ params, searchParams }: any) {
           </PaginationContent>
         </Pagination>
       </div> */}
-    </>
+    </div>
   );
 }
 

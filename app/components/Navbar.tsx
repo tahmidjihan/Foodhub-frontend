@@ -20,7 +20,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass py-3 shadow-md' : 'bg-transparent py-5'
+        scrolled ? 'bg-black py-3 shadow-md' : 'bg-transparent py-5'
       }`}
     >
       <div className='container mx-auto px-6 flex items-center justify-between'>
@@ -33,22 +33,20 @@ const Navbar = () => {
         <div className='hidden md:flex items-center gap-8'>
           <Link
             href='/meals'
-            className='font-semibold hover:text-primary transition-colors'
+            className='font-semibold text-white transition-colors'
           >
             Meals
           </Link>
           <Link
             href='/providers'
-            className='font-semibold hover:text-primary transition-colors'
+            className='font-semibold text-white transition-colors'
           >
             Providers
           </Link>
           <Link
             href='#register'
-            className='font-semibold hover:text-primary transition-colors'
-          >
-            Partner with us
-          </Link>
+            className='font-semibold text-white transition-colors'
+          ></Link>
         </div>
 
         <div className='flex items-center gap-4'>

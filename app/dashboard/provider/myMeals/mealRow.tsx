@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+// import { useAuth } from '@/app/auth/useAuth';
 
 function MealRow({ item }: { item: any }) {
   const router = useRouter();
@@ -17,18 +18,21 @@ function MealRow({ item }: { item: any }) {
         method: 'DELETE',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     );
     if (res.ok) {
       toast.success('Meal deleted successfully');
+      // console.log(res);
       router.refresh();
     } else {
       toast.error('Failed to delete meal');
+      // console.log(res);
     }
   }
 
   return (
     <TableRow key={item.id}>
+      {' '}
       <TableCell className='font-medium text-white'>
         {item.name ?? '—'}
       </TableCell>

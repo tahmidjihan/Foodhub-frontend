@@ -1,91 +1,83 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 
-interface Props {}
+interface Props {
+  searchParams: { skip?: string; take?: string };
+}
 
 async function Page(props: Props) {
-  const {} = props;
-  const pagination = { skip: 0, take: 10 };
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND}/api/providers?skip=${pagination.skip}&take=${pagination.take}`,
-  ).then((res) => res.json());
-  //   console.log(data);
+  const { searchParams } = props;
+  const { skip = '0', take = '10' } = searchParams;
+  const pagination = {
+    skip: Math.max(0, parseInt(skip) || 0),
+    take: Math.min(50, parseInt(take) || 10),
+  };
+
+  const cookieStore = cookies(); // Not strictly needed for public endpoint, but good practice if it becomes authenticated
+  let data: any[] = [];
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/providers?skip=${pagination.skip}&take=${pagination.take}`,
+    );
+    if (res.ok) {
+      data = await res.json();
+    }
+  } catch (error) {
+    console.error('Error fetching providers:', error);
+    data = [];
+  }
+  if (!Array.isArray(data)) data = [];
+
   return (
-    <>
-      <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
-        <div>
-          <h1 className='text-3xl font-bold text-neutral-50'>Providers</h1>
-        </div>
-        <Table>
-          <TableCaption>A list of Providers.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='w-[100px]'>Name</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((item: any) => (
-              <TableRow key={item.id}>
-                <TableCell className='font-medium  text-white'>
-                  <Link href={`/dashboard/providers/${item.id}`}>
-                    {item.name}
+    <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
+      <h1 className='text-3xl font-bold text-neutral-50'>Providers</h1>
+      <Table>
+        <TableCaption>A list of all FoodHub providers.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className='w-[100px]'>Name</TableHead>
+            <TableHead className='w-[100px]'>Email</TableHead>
+            {/* Add more headers if needed */}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.length > 0 ? (
+            data.map((provider: any) => (
+              <TableRow key={provider.id}>
+                <TableCell className='font-medium text-white'>
+                  <Link href={`/dashboard/providers/${provider.id}`}>
+                    {provider.name}
                   </Link>
-                  {/* {item.name} */}
+                </TableCell>
+                <TableCell className='font-medium text-white'>
+                  {provider.email}
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className='bg-orange-500 rounded-md py-2 flex items-center justify-center'>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href={`?skip=${pagination.skip - pagination.take}&take=${pagination.take}`}
-                />
-              </PaginationItem>
-
-              <PaginationItem>
-                <PaginationLink
-                  href={`?skip=${pagination.skip + pagination.take}&take=${pagination.take}`}
-                  isActive
-                >
-                  {pagination.skip / pagination.take + 1}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  href={`?skip=${pagination.skip + pagination.take}&take=${pagination.take}`}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      </div>
-    </>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={2}
+                className='text-center text-muted-foreground py-8'
+              >
+                No providers found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {/* Pagination can be added here if needed, consistent with other list pages */}
+    </div>
   );
 }
 
