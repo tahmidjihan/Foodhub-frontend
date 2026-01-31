@@ -3,6 +3,7 @@
 import React from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -38,7 +39,17 @@ function MealRow({ item }: { item: any }) {
         {item.type ?? '—'}
       </TableCell>
       <TableCell className='font-medium text-white'>
-        <Button variant='destructive' size='sm' onClick={deleteMeal}>
+        <Button variant='outline' size='sm' asChild>
+          <Link href={`/dashboard/provider/createMeal?mealId=${item.id}`}>
+            Edit
+          </Link>
+        </Button>
+        <Button
+          variant='destructive'
+          size='sm'
+          className='ml-2'
+          onClick={deleteMeal}
+        >
           Delete
         </Button>
       </TableCell>
