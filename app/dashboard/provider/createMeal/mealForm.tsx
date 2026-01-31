@@ -27,7 +27,6 @@ function MealForm({
           name: initialData.name,
           price: String(initialData.price),
           image: initialData.image,
-          description: initialData.description ?? '',
           type: initialData.type,
           tags: Array.isArray(initialData.tags)
             ? initialData.tags.join(', ')
@@ -41,7 +40,6 @@ function MealForm({
       name: data.name,
       price: parseFloat(data.price),
       image: data.image,
-      description: data.description || 'No description provided',
       type: data.type,
       tags: data.tags
         ? data.tags
@@ -149,21 +147,6 @@ function MealForm({
         {errors.type?.type === 'required' && (
           <p className='py-1 text-xs text-red-500'>Type is required</p>
         )}
-      </div>
-      <div>
-        <Label
-          htmlFor='description'
-          className='text-sm font-medium text-foreground dark:text-foreground'
-        >
-          Description
-        </Label>
-        <textarea
-          id='description'
-          rows={3}
-          placeholder='Meal description'
-          className='mt-2 w-full rounded-md border text-white bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border-white/10'
-          {...register('description')}
-        />
       </div>
       <div>
         <Label

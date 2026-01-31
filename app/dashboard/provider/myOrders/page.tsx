@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
   Table,
@@ -8,43 +10,39 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
-import { cookies } from 'next/headers';
 import OrderRow from './orderRow';
+import { useAuth } from '@/app/auth/useAuth';
 
-interface Props {
-  searchParams: Promise<{ skip?: string; take?: string }>;
-}
+interface Props {}
 
-async function Page(props: Props) {
-  const { searchParams } = props;
-  const { skip = '0', take = '10' } = await searchParams;
-  const pagination = {
-    skip: Math.max(0, parseInt(skip) || 0),
-    take: Math.min(50, parseInt(take) || 10),
-  };
-  const cookieStore = await cookies();
-  let data: any[] = [];
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/orders?skip=${pagination.skip}&take=${pagination.take}`,
-      { headers: { cookie: cookieStore.toString() } }
-    );
-    if (res.ok) {
-      data = await res.json();
+function Page(props: Props) {
+  const session = useAuth();
+  const [data, setData] = React.useState<any[]>([]);
+  const providerId = session.data?.user?.id;
+
+  React.useEffect(() => {
+    if (providerId) {
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND}/api/orders/provider/${providerId}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((fetchedData) => {
+          setData(fetchedData);
+          console.log('My Orders data:', fetchedData);
+        })
+        .catch((error) => {
+          console.error('Error fetching My Orders data:', error);
+          setData([]);
+        });
     }
-  } catch {
-    data = [];
-  }
-  if (!Array.isArray(data)) data = [];
+  }, [providerId]);
 
   return (
     <>
@@ -79,40 +77,6 @@ async function Page(props: Props) {
             )}
           </TableBody>
         </Table>
-        {data.length === pagination.take && (
-          <div className='bg-orange-500 rounded-md py-2 flex items-center justify-center'>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href={`?skip=${Math.max(
-                      0,
-                      pagination.skip - pagination.take
-                    )}&take=${pagination.take}`}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href={`?skip=${pagination.skip}&take=${pagination.take}`}
-                    isActive
-                  >
-                    {pagination.skip / pagination.take + 1}
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    href={`?skip=${pagination.skip + pagination.take}&take=${
-                      pagination.take
-                    }`}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
       </div>
     </>
   );

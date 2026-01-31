@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   Table,
@@ -17,34 +18,48 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { cookies } from 'next/headers';
 import MealRow from './mealRow';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { authClient } from '@/app/auth/auth';
+import { useAuth } from '@/app/auth/useAuth';
 
 interface Props {
   searchParams: Promise<{ skip?: string; take?: string }>;
 }
 
-async function Page(props: Props) {
+function Page(props: Props) {
   const { searchParams } = props;
-  const { skip = '1', take = '10' } = await searchParams;
-  const page = Math.max(1, parseInt(skip) || 1);
-  const takeNum = Math.min(50, parseInt(take) || 10);
-  const cookieStore = await cookies();
-  let data: any[] = [];
+  // const { skip = '1', take = '10' } = searchParams;
+  // const page = Math.max(1, parseInt(skip) || 1); // 1-based page number for URL
+  // const takeNum = Math.min(50, parseInt(take) || 10);
+  // const cookieStore = await cookies();
+  const session = useAuth();
+  // console.log(session);
+  // let data: any[] = [];
+  const [data, setData] = React.useState<any[]>([]);
+  const id = session.data?.user?.id;
+  // console.log(id);
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/meals?skip=${page}&take=${takeNum}`,
-      { headers: { cookie: cookieStore.toString() } }
-    );
-    if (res.ok) {
-      data = await res.json();
-    }
+    const res = fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/meals/provider/${id}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    ).then((res) => {
+      res.json().then((data) => setData(data));
+    });
   } catch {
-    data = [];
+    setData([]);
   }
-  if (!Array.isArray(data)) data = [];
+  if (!Array.isArray(data)) {
+    setData([]);
+  }
+  if (!Array.isArray(data)) setData([]);
 
   return (
     <>
@@ -80,33 +95,6 @@ async function Page(props: Props) {
             )}
           </TableBody>
         </Table>
-        {data.length === takeNum && (
-          <div className='bg-orange-500 rounded-md py-2 flex items-center justify-center'>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href={`?skip=${Math.max(1, page - 1)}&take=${takeNum}`}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href={`?skip=${page}&take=${takeNum}`}
-                    isActive
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href={`?skip=${page + 1}&take=${takeNum}`} />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
       </div>
     </>
   );

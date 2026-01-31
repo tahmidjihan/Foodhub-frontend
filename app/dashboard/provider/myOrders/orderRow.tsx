@@ -10,18 +10,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
 const STATUSES = ['Pending', 'InProgress', 'Completed', 'Cancelled'];
 
 function OrderRow({ item }: { item: any }) {
-  const router = useRouter();
-
   async function updateStatus(status: string) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/orders/${item.id}`,
       {
-        method: 'GET',
+        method: 'PATCH',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -29,7 +26,7 @@ function OrderRow({ item }: { item: any }) {
     );
     if (res.ok) {
       toast.success('Order status updated');
-      router.refresh();
+      // router.refresh(); // Removed
     } else {
       toast.error('Failed to update status');
     }
