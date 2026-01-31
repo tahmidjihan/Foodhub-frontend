@@ -25,6 +25,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import { useAuth } from '@/app/auth/useAuth';
 
 // This is sample data.
 const data = {
@@ -35,13 +36,18 @@ const data = {
   },
   teams: [
     {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
+      name: 'FoodHub',
+      logo: PieChart,
+      plan: 'Order Food',
     },
   ],
 
-  projects: [
+  projects: [],
+};
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const session = useAuth();
+  const userItems = [
     {
       name: 'Dashboard',
       url: '/dashboard',
@@ -66,29 +72,37 @@ const data = {
       icon: BookOpen,
       role: 'user',
     },
+  ];
+  const providerItems = [
     {
-      name: 'Orders',
-      url: '/dashboard/provider/orders',
+      name: 'My Orders',
+      url: '/dashboard/provider/myOrders',
       icon: AudioWaveform,
       role: 'Provider',
     },
     {
       name: 'My Meals',
-      url: '/dashboard/provider/meals',
+      url: '/dashboard/provider/myMeals',
       icon: PieChart,
       role: 'Provider',
     },
-  ],
-};
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    {
+      name: 'Create Meal',
+      url: '/dashboard/provider/createMeal',
+      icon: SquareTerminal,
+      role: 'Provider',
+    },
+  ];
+  // @ts-ignore
+  const role = session.data?.user?.role;
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavItems items={data.projects} />
+        {role == 'User' && <NavItems items={userItems} />}
+        {role == 'Provider' && <NavItems items={providerItems} />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

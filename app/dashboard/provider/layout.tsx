@@ -1,14 +1,13 @@
-import { useAuth } from '@/app/auth/useAuth';
-import { redirect } from 'next/navigation';
 import React from 'react';
+import ProviderValidate from './providerValidate';
 
-function Layout() {
-  const session = useAuth();
-  // @ts-ignore
-  if (!session.data?.user && session.data?.user?.role !== 'provider') {
-    redirect('/auth/login');
-  }
-  return <></>;
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <ProviderValidate />
+      {children}
+    </>
+  );
 }
 
 export default Layout;

@@ -19,7 +19,7 @@ function Header(props: Props) {
   const {} = props;
   const session = useAuth();
   setTimeout(() => {
-    if (!session.data?.user) {
+    if (!session.data?.user && !session.isPending) {
       redirect('/auth/login');
     }
   }, 2000);
