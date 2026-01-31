@@ -5,3 +5,6 @@ export function useAuth() {
   const session = authClient.useSession();
   return session;
 }
+export function signOut() {
+  authClient.signOut();
+}

@@ -46,21 +46,37 @@ const data = {
       name: 'Dashboard',
       url: '/dashboard',
       icon: Frame,
+      role: 'user',
     },
     {
       name: 'Meals',
       url: '/dashboard/meals',
       icon: PieChart,
+      role: 'user',
     },
     {
       name: 'Providers',
       url: '/dashboard/providers',
       icon: Map,
+      role: 'user',
     },
     {
-      name: 'cart',
+      name: 'Cart',
       url: '/dashboard/cart',
       icon: BookOpen,
+      role: 'user',
+    },
+    {
+      name: 'Orders',
+      url: '/dashboard/provider/orders',
+      icon: AudioWaveform,
+      role: 'Provider',
+    },
+    {
+      name: 'My Meals',
+      url: '/dashboard/provider/meals',
+      icon: PieChart,
+      role: 'Provider',
     },
   ],
 };
@@ -72,7 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavItems projects={data.projects} />
+        <NavItems items={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
