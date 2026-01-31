@@ -47,6 +47,8 @@ function MealCard({ item }: any) {
       <CardHeader>
         <CardTitle>{item.name}</CardTitle>
         <CardDescription>{item.description}</CardDescription>
+        <p>${item.price}</p>
+        <p className='text-xs'>{item.type}</p>
       </CardHeader>
       <CardFooter>
         <Button

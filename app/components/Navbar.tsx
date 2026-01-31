@@ -52,7 +52,7 @@ const Navbar = () => {
         <div className='flex items-center gap-4'>
           <Link
             href='/auth/login'
-            className='hidden sm:block font-bold hover:text-primary transition-colors'
+            className='hidden sm:block font-bold text-white transition-colors'
           >
             Sign In
           </Link>
