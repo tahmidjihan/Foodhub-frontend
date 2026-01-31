@@ -12,6 +12,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  ShoppingBag,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -64,6 +65,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       name: 'Providers',
       url: '/dashboard/providers',
       icon: Map,
+      role: 'user',
+    },
+    {
+      name: 'Orders',
+      url: '/dashboard/orders',
+      icon: ShoppingBag,
       role: 'user',
     },
     {

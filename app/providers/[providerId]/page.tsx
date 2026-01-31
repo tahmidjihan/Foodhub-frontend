@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import MealCard from '../../meals/mealCard';
+import Navbar from '@/app/components/Navbar';
 interface Props {}
 
 async function Page({ params }: { params: { providerId: string } }) {
@@ -36,7 +37,8 @@ async function Page({ params }: { params: { providerId: string } }) {
 
   return (
     <div className='bg-black min-h-screen'>
-      <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
+      <Navbar />
+      <div className='p-8 space-y-6 mx-auto max-w-7xl w-full pt-20'>
         <div>
           <h1 className='text-3xl font-bold text-neutral-50'>
             Meals by your provider
