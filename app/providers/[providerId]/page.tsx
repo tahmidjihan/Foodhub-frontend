@@ -41,7 +41,7 @@ async function Page({ params }: { params: { providerId: string } }) {
       <div className='p-8 space-y-6 mx-auto max-w-7xl w-full pt-20'>
         <div>
           <h1 className='text-3xl font-bold text-neutral-50'>
-            Meals by your provider
+            Menu of your provider
           </h1>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>

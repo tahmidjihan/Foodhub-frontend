@@ -60,14 +60,28 @@ function Form({ isLogin }: { isLogin?: boolean }) {
         {
           onRequest: (ctx) => {},
           onSuccess: (ctx) => {
-            console.log('User signed up successfully:', ctx.data);
-            // Store role in localStorage or send to your backend
-            if (role) {
-              localStorage.setItem('userRole', role);
+            // console.log(ctx);
+            // console.log('User signed up successfully:', ctx.data)
+            if (role == 'Provider') {
+              const data = fetch(
+                `${process.env.NEXT_PUBLIC_BACKEND}/api/providers`,
+                {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    name,
+                    userId: ctx.data.user.id,
+                  }),
+                },
+              ).then((res) => {
+                setTimeout(() => {
+                  redirect('/');
+                }, 1000);
+              });
             }
-            setTimeout(() => {
-              redirect('/');
-            }, 1000);
           },
           onError: (ctx) => {
             // alert(ctx.error.message);

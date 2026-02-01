@@ -32,6 +32,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { useAuth } from '@/app/auth/useAuth';
+import Link from 'next/link';
 
 // This is sample data.
 const data = {
@@ -58,18 +59,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       name: 'Dashboard',
       url: '/dashboard',
       icon: Frame,
-      role: 'user',
-    },
-    {
-      name: 'Meals',
-      url: '/dashboard/meals',
-      icon: PieChart,
-      role: 'user',
-    },
-    {
-      name: 'Providers',
-      url: '/dashboard/providers',
-      icon: Map,
       role: 'user',
     },
     {
@@ -130,7 +119,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        {/* <TeamSwitcher teams={data.teams} /> */}
+        <div className='py-2 flex gap-1 px-2'>
+          <Link href='/'>
+            <h1 className='text-3xl font-bold text-orange-500'>FoodHub</h1>
+            <span className='text-sm'>Order Food</span>
+          </Link>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {role == 'Customer' && <NavItems items={userItems} />}
