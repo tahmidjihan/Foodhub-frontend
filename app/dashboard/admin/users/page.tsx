@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -9,18 +10,35 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { cookies } from 'next/headers';
+import Suspend from './suspend';
+import Activate from './activate';
 
-export default async function AdminUsersPage() {
-  const cookieStore = await cookies();
-  const users: any[] = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users`,
-    {
-      headers: {
-        cookie: cookieStore.toString(),
-      },
-    },
-  ).then((res) => res.json());
+export default function AdminUsersPage() {
+  const [users, setUsers] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const cookieString = document.cookie;
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users`, {
+        headers: {
+          'Cookie': cookieString,
+        },
+        credentials: 'include',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(Array.isArray(data) ? data : []);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      setUsers([]);
+    }
+  };
 
   return (
     <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
@@ -60,12 +78,11 @@ export default async function AdminUsersPage() {
               </TableCell>
               <TableCell className='font-medium text-white'>
                 <div className='flex gap-2'>
-                  <Button variant='outline' size='sm'>
-                    Edit
-                  </Button>
-                  <Button variant='destructive' size='sm'>
-                    Delete
-                  </Button>
+                  {user.isActive == true ? (
+                    <Suspend id={user.id} />
+                  ) : (
+                    <Activate id={user.id} />
+                  )}
                 </div>
               </TableCell>
             </TableRow>
