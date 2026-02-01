@@ -61,6 +61,7 @@ function MealForm({
       );
       if (res.ok) {
         toast.success('Meal updated successfully');
+        window.location.reload();
       } else {
         toast.error('Failed to update meal');
       }
@@ -76,6 +77,7 @@ function MealForm({
       );
       if (res.ok) {
         toast.success('Meal created successfully');
+        window.location.reload();
       } else {
         toast.error('Failed to create meal');
       }

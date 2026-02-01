@@ -26,7 +26,7 @@ function OrderRow({ item }: { item: any }) {
     );
     if (res.ok) {
       toast.success('Order status updated');
-      // router.refresh(); // Removed
+      window.location.reload();
     } else {
       toast.error('Failed to update status');
     }

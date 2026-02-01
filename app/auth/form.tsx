@@ -11,7 +11,7 @@ import { useAuth } from './useAuth';
 type Inputs = {
   name?: string;
   email: string;
-  role: 'User' | 'Provider';
+  role: 'Customer' | 'Provider';
   password: string;
 };
 
@@ -31,6 +31,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { name = 'Unknown', email, password, role } = data;
+    console.log(data);
     if (isLogin) {
       const { data: session, error } = await authClient.signIn.email({
         email,
@@ -86,51 +87,51 @@ function Form({ isLogin }: { isLogin?: boolean }) {
 
         <form onSubmit={handleSubmit(onSubmit)} className='mt-6 space-y-4'>
           {!isLogin && (
-              <> <div>
-              <Label
-                htmlFor='email-login'
-                className='text-sm font-medium text-foreground dark:text-foreground'
-              >
-                Name
-              </Label>
-              <Input
-                type='text'
-                id='name'
-                autoComplete='name'
-                placeholder='John Doe'
-                className='mt-2 bg-background/50 border-white/10'
-                {...register('name', { required: true })}
-              />
+            <>
+              {' '}
+              <div>
+                <Label
+                  htmlFor='email-login'
+                  className='text-sm font-medium text-foreground dark:text-foreground'
+                >
+                  Name
+                </Label>
+                <Input
+                  type='text'
+                  id='name'
+                  autoComplete='name'
+                  placeholder='John Doe'
+                  className='mt-2 bg-background/50 border-white/10'
+                  {...register('name', { required: true })}
+                />
 
-              {errors.name?.type === 'required' && (
-                <p className='py-1 text-xs text-red-500'>
-                  First name is required
-                </p>
-              )}
-            </div>
-             <div>
-              <Label
-                htmlFor='email-login'
-                className='text-sm font-medium text-foreground dark:text-foreground'
-              >
-                Role
-              </Label>
-              <Input
-                type=' text'
-                id='role'
-                autoComplete='role'
-                placeholder='User or Provider'
-                className='mt-2 bg-background/50 border-white/10'
-                {...register('role', { required: true })}
-              />
+                {errors.name?.type === 'required' && (
+                  <p className='py-1 text-xs text-red-500'>
+                    First name is required
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label
+                  htmlFor='email-login'
+                  className='text-sm font-medium text-foreground dark:text-foreground'
+                >
+                  Role
+                </Label>
+                <Input
+                  type=' text'
+                  id='role'
+                  autoComplete='role'
+                  placeholder='Customer or Provider'
+                  className='mt-2 bg-background/50 border-white/10'
+                  {...register('role', { required: true })}
+                />
 
-              {errors.role?.type === 'required' && (
-                <p className='py-1 text-xs text-red-500'>
-                  Role is required
-                </p>
-              )}
-            </div>
-         </>
+                {errors.role?.type === 'required' && (
+                  <p className='py-1 text-xs text-red-500'>Role is required</p>
+                )}
+              </div>
+            </>
           )}
           <div>
             <Label
@@ -153,9 +154,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
               className='mt-2 bg-background/50 border-white/10'
             />
             {errors.email?.type === 'required' && (
-              <p className='py-1 text-xs text-red-500'>
-                Email is required
-              </p>
+              <p className='py-1 text-xs text-red-500'>Email is required</p>
             )}
             {errors.email?.type === 'pattern' && (
               <p className='py-1 text-xs text-red-500'>
@@ -210,7 +209,6 @@ function Form({ isLogin }: { isLogin?: boolean }) {
             Sign in
           </Button>
         </form>
-
 
         <p className='mt-4 text-xs text-muted-foreground dark:text-muted-foreground'>
           By signing in, you agree to our{' '}

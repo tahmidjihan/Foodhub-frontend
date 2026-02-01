@@ -22,11 +22,9 @@ function MealRow({ item }: { item: any }) {
     );
     if (res.ok) {
       toast.success('Meal deleted successfully');
-      // console.log(res);
-      router.refresh();
+      window.location.reload();
     } else {
       toast.error('Failed to delete meal');
-      // console.log(res);
     }
   }
 

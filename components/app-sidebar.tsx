@@ -17,6 +17,7 @@ import {
   Shield,
   Users,
   FileText,
+  Grid3X3,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -117,6 +118,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: FileText,
       role: 'Admin',
     },
+    {
+      name: 'Manage Categories',
+      url: '/dashboard/admin/categories',
+      icon: Grid3X3,
+      role: 'Admin',
+    },
   ];
   // @ts-ignore
   const role = session.data?.user?.role;
@@ -126,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        {role == 'User' && <NavItems items={userItems} />}
+        {role == 'Customer' && <NavItems items={userItems} />}
         {role == 'Provider' && <NavItems items={providerItems} />}
         {role == 'Admin' && <NavItems items={adminItems} />}
       </SidebarContent>

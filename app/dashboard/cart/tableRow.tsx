@@ -17,6 +17,7 @@ function TR({ item }: any) {
         if (res.status === 200) {
           //   console.log('Added to Cart successfully');
           toast.success('Deleted Cart successfully');
+          window.location.reload();
           return res.json();
         }
       })

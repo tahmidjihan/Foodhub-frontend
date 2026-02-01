@@ -1,4 +1,5 @@
 'use client';
+import { redirect } from 'next/navigation';
 import { authClient } from './auth';
 
 export function useAuth() {
@@ -6,5 +7,7 @@ export function useAuth() {
   return session;
 }
 export function signOut() {
-  authClient.signOut();
+  authClient.signOut().then(() => {
+    redirect('/');
+  });
 }
