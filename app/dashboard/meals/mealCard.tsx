@@ -25,7 +25,7 @@ function MealCard({ item }: any) {
       }),
     })
       .then((res) => {
-        if (res) {
+        if (res.ok) {
           console.log('Added to Cart successfully');
           toast.success('Added to Cart successfully');
           return res.json();

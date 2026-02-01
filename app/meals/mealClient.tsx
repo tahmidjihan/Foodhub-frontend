@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Pagination,
@@ -11,18 +11,42 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import MealCard from './mealCard';
+import { Label } from '@/components/ui/label';
 interface Props {
   data: any[];
 }
 
 function MealClient({ data }: Props) {
   const [preference, setPreference] = useState('both');
+  const [category, setCategory] = useState('all');
+  const [categories, setCategories] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND}/api/categories`,
+        );
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    if (categories.length === 0) {
+      fetchCategories();
+    }
+  }, []);
   const [sort, setSort] = useState<'asc' | 'desc' | null>(null);
   const memo = useMemo(() => {
     let filteredData = [...data];
     if (preference !== 'both') {
       filteredData = filteredData.filter(
         (item: any) => item.type === preference,
+      );
+    }
+    if (category !== 'all') {
+      filteredData = filteredData.filter(
+        (item: any) => item.categoryId === category,
       );
     }
     if (sort === 'asc') {
@@ -35,17 +59,41 @@ function MealClient({ data }: Props) {
       console.log(filteredData);
     }
     return filteredData;
-  }, [preference, sort, data]);
+  }, [preference, sort, data, category]);
   return (
     <div className='p-8 space-y-6 mx-auto max-w-7xl w-full pt-20'>
       <div>
         <h1 className='text-3xl font-bold text-neutral-50'>Meals</h1>
       </div>
-      <div className='flex justify-between flex-wrap'>
+      <div className='flex justify-between flex-wrap gap-5'>
         <div className='flex gap-4'>
           <Button onClick={() => setPreference('veg')}>Veg</Button>
           <Button onClick={() => setPreference('non-veg')}>Non Veg</Button>
           <Button onClick={() => setPreference('both')}>Both</Button>
+        </div>
+        <div>
+          <div>
+            <div className='dark'>
+              <select
+                id='category'
+                onChange={(e) => setCategory(e.target.value)}
+                className=' w-full bg-background/50 border-white/10 text-white p-3 rounded-md border'
+              >
+                <option value='all' className='bg-gray-800'>
+                  Select a category
+                </option>
+                {categories.map((category: any) => (
+                  <option
+                    key={category.id}
+                    value={category.id}
+                    className='bg-gray-800'
+                  >
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
         <div className='flex gap-4'>
           {' '}

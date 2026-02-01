@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,15 @@ function MealForm({
   mealId?: string;
   initialData?: any;
 }) {
+  const [categories, setCategories] = React.useState<any[]>([]);
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/categories`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+      });
+  }, []);
+  console.log(categories);
   const isEdit = !!mealId && !!initialData;
 
   const {
@@ -28,6 +37,7 @@ function MealForm({
           price: String(initialData.price),
           image: initialData.image,
           type: initialData.type,
+          categoryId: initialData.categoryId || '',
           tags: Array.isArray(initialData.tags)
             ? initialData.tags.join(', ')
             : '',
@@ -41,6 +51,7 @@ function MealForm({
       price: parseFloat(data.price),
       image: data.image,
       type: data.type,
+      categoryId: data.categoryId,
       tags: data.tags
         ? data.tags
             .split(',')
@@ -134,6 +145,36 @@ function MealForm({
         />
         {errors.image?.type === 'required' && (
           <p className='py-1 text-xs text-red-500'>Image URL is required</p>
+        )}
+      </div>
+      <div>
+        <Label
+          htmlFor='category'
+          className='text-sm font-medium text-foreground'
+        >
+          Category
+        </Label>
+        <select
+          id='category'
+          className='mt-2 w-full bg-background/50 border-white/10 text-white p-3 rounded-md border'
+          {...register('categoryId', { required: 'Category is required' })}
+          defaultValue={initialData?.categoryId || ''}
+        >
+          <option value='' className='bg-gray-800'>
+            Select a category
+          </option>
+          {categories.map((category: any) => (
+            <option
+              key={category.id}
+              value={category.id}
+              className='bg-gray-800'
+            >
+              {category.name}
+            </option>
+          ))}
+        </select>
+        {errors.categoryId && (
+          <p className='py-1 text-xs text-red-500'>Category is required</p>
         )}
       </div>
       <div>
