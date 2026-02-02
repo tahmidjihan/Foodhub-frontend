@@ -23,7 +23,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
     if (session?.data?.user) {
       redirect('/dashboard');
     }
-  });
+  }, [session]);
   const {
     register,
     handleSubmit,
@@ -33,39 +33,48 @@ function Form({ isLogin }: { isLogin?: boolean }) {
     const { name = 'Unknown', email, password, role } = data;
     console.log(data);
     if (isLogin) {
-      const { data: session, error } = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: 'https://foodhub-frontend-sigma.vercel.app',
-        rememberMe: true,
-      });
-      if (error) {
-        console.log('Error signing in:', error);
-      } else {
-        console.log('User signed in successfully:', session);
-        setTimeout(() => {
-          redirect('/');
-        }, 1000);
-      }
-    } else {
-      const { data: authData, error } = await authClient.signUp.email(
-        {
+      try {
+        const { data: session, error } = await authClient.signIn.email({
           email,
           password,
-          name,
-          // @ts-ignore
-          role,
-          callbackURL: 'https://foodhub-frontend-sigma.vercel.app/',
-        },
-        {
-          onRequest: (ctx) => {},
-          onSuccess: (ctx) => {
-            // console.log(ctx);
-            // console.log('User signed up successfully:', ctx.data)
-            if (role == 'Provider') {
-              const data = fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND}/api/providers`,
-                {
+          // callbackURL: 'http://localhost:5000/',
+          rememberMe: true,
+        });
+        if (error) {
+          console.error('Error signing in:', error);
+          alert(`Sign in error: ${error.message || 'Unknown error'}`);
+        } else {
+          console.log('User signed in successfully:', session);
+          setTimeout(() => {
+            redirect('/dashboard');
+          }, 1000);
+        }
+      } catch (err) {
+        console.error('Network error during sign in:', err);
+        alert(
+          `Network error: ${err instanceof Error ? err.message : 'Failed to connect to server'}`,
+        );
+      }
+    } else {
+      try {
+        const { data: authData, error } = await authClient.signUp.email(
+          {
+            email,
+            password,
+            name,
+            // @ts-ignore
+            role,
+            callbackURL: 'https://foodhub-frontend-sigma.vercel.app/',
+          },
+          {
+            onRequest: (ctx) => {},
+            onSuccess: (ctx) => {
+              console.log('User signed up successfully:', ctx.data);
+              if (role == 'Provider') {
+                const backendUrl =
+                  process.env.NEXT_PUBLIC_BACKEND ||
+                  'https://food-backend-rust-omega.vercel.app';
+                const data = fetch(`${backendUrl}/api/providers`, {
                   method: 'POST',
                   credentials: 'include',
                   headers: {
@@ -75,20 +84,33 @@ function Form({ isLogin }: { isLogin?: boolean }) {
                     name,
                     userId: ctx.data.user.id,
                   }),
-                },
-              ).then((res) => {
+                })
+                  .then((res) => {
+                    setTimeout(() => {
+                      redirect('/dashboard');
+                    }, 2000);
+                  })
+                  .catch((err) => {
+                    console.error('Error creating provider:', err);
+                  });
+              } else {
                 setTimeout(() => {
-                  redirect('/');
+                  redirect('/dashboard');
                 }, 1000);
-              });
-            }
+              }
+            },
+            onError: (ctx) => {
+              console.error('Sign up error:', ctx.error);
+              alert(`Sign up error: ${ctx.error.message || 'Unknown error'}`);
+            },
           },
-          onError: (ctx) => {
-            // alert(ctx.error.message);
-            console.log(ctx.error);
-          },
-        },
-      );
+        );
+      } catch (err) {
+        console.error('Network error during sign up:', err);
+        alert(
+          `Network error: ${err instanceof Error ? err.message : 'Failed to connect to server'}`,
+        );
+      }
     }
   };
 

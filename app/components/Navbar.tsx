@@ -6,8 +6,6 @@ import { useAuth } from '../auth/useAuth';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const session = useAuth();
-  console.log(session);
 
   useEffect(() => {
     const handleScroll = () => {
