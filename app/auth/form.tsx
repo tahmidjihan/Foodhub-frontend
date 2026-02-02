@@ -20,7 +20,7 @@ interface Props {}
 function Form({ isLogin }: { isLogin?: boolean }) {
   const session = useAuth();
   useEffect(() => {
-    if (session?.data?.user) {
+    if (session?.data?.user && !session.isPending) {
       redirect('/dashboard');
     }
   }, [session]);
@@ -37,7 +37,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
         const { data: session, error } = await authClient.signIn.email({
           email,
           password,
-          // callbackURL: 'http://localhost:5000/',
+          callbackURL: 'https://foodhub-frontend-sigma.vercel.app/',
           rememberMe: true,
         });
         if (error) {

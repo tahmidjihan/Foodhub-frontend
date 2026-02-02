@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -10,35 +10,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+// import { cookies } from 'next/headers';
 import Suspend from './suspend';
 import Activate from './activate';
 
-export default function AdminUsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    try {
-      const cookieString = document.cookie;
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users`, {
-        headers: {
-          'Cookie': cookieString,
-        },
-        credentials: 'include',
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(Array.isArray(data) ? data : []);
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setUsers([]);
-    }
-  };
+export default async function AdminUsersPage() {
+  const users = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users`,
+    {
+      credentials: 'include',
+    },
+  ).then((res) => res.json());
 
   return (
     <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
