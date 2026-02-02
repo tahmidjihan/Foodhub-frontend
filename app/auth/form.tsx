@@ -36,7 +36,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
       const { data: session, error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: 'http://localhost:5000/',
+        callbackURL: 'https://foodhub-frontend-sigma.vercel.app',
         rememberMe: true,
       });
       if (error) {
@@ -55,7 +55,7 @@ function Form({ isLogin }: { isLogin?: boolean }) {
           name,
           // @ts-ignore
           role,
-          callbackURL: 'http://localhost:5000/',
+          callbackURL: 'https://foodhub-frontend-sigma.vercel.app/',
         },
         {
           onRequest: (ctx) => {},
