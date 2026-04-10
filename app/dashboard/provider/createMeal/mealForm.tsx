@@ -16,13 +16,21 @@ function MealForm({
   initialData?: any;
 }) {
   const [categories, setCategories] = React.useState<any[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = React.useState(true);
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/categories`)
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data);
+        setCategories(Array.isArray(data) ? data : []);
+        setCategoriesLoading(false);
+      })
+      .catch(() => {
+        setCategories([]);
+        setCategoriesLoading(false);
       });
-  });
+  }, []);
+
   const isEdit = !!mealId && !!initialData;
 
   const {
@@ -36,6 +44,7 @@ function MealForm({
           price: String(initialData.price),
           image: initialData.image,
           type: initialData.type,
+          categoryId: initialData.categoryId || '',
           tags: Array.isArray(initialData.tags)
             ? initialData.tags.join(', ')
             : '',
@@ -44,11 +53,17 @@ function MealForm({
   });
 
   const onSubmit = async (data: any) => {
+    if (!data.categoryId) {
+      toast.error('Please select a category');
+      return;
+    }
+
     const payload = {
       name: data.name,
       price: parseFloat(data.price),
       image: data.image,
       type: data.type,
+      categoryId: data.categoryId,
       tags: data.tags
         ? data.tags
             .split(',')
@@ -97,14 +112,14 @@ function MealForm({
       <div>
         <Label
           htmlFor='name'
-          className='text-sm font-medium text-foreground dark:text-foreground'
+          className='text-sm font-medium text-foreground'
         >
           Name
         </Label>
         <Input
           id='name'
           placeholder='Meal name'
-          className='mt-2 bg-background/50 border-white/10 text-white'
+          className='mt-2 bg-background/50 border-border text-foreground placeholder:text-muted-foreground'
           {...register('name', { required: true })}
         />
         {errors.name?.type === 'required' && (
@@ -120,7 +135,7 @@ function MealForm({
           type='number'
           step='0.01'
           placeholder='0.00'
-          className='mt-2 bg-background/50 border-white/10 text-white'
+          className='mt-2 bg-background/50 border-border text-foreground placeholder:text-muted-foreground'
           {...register('price', { required: true, min: 0 })}
         />
         {errors.price?.type === 'required' && (
@@ -130,14 +145,14 @@ function MealForm({
       <div>
         <Label
           htmlFor='image'
-          className='text-sm font-medium text-foreground dark:text-foreground'
+          className='text-sm font-medium text-foreground'
         >
           Image URL
         </Label>
         <Input
           id='image'
           placeholder='https://example.com/image.jpg'
-          className='mt-2 bg-background/50 border-white/10 text-white'
+          className='mt-2 bg-background/50 border-border text-foreground placeholder:text-muted-foreground'
           {...register('image', { required: true })}
         />
         {errors.image?.type === 'required' && (
@@ -151,7 +166,7 @@ function MealForm({
         <Input
           id='type'
           placeholder='e.g. Veg, Non-veg, etc.'
-          className='mt-2 bg-background/50 border-white/10 text-white'
+          className='mt-2 bg-background/50 border-border text-foreground placeholder:text-muted-foreground'
           {...register('type', { required: true })}
         />
         {errors.type?.type === 'required' && (
@@ -160,15 +175,52 @@ function MealForm({
       </div>
       <div>
         <Label
+          htmlFor='categoryId'
+          className='text-sm font-medium text-foreground'
+        >
+          Category <span className='text-red-500'>*</span>
+        </Label>
+        <select
+          id='categoryId'
+          className='mt-2 w-full bg-background/50 border border-border text-foreground p-2.5 rounded-md focus:outline-none focus:ring-2 focus:ring-primary'
+          {...register('categoryId', { required: 'Category is required' })}
+        >
+          <option value='' className='bg-background text-foreground'>
+            Select a category
+          </option>
+          {categoriesLoading ? (
+            <option value='' className='bg-background text-foreground'>
+              Loading categories...
+            </option>
+          ) : categories.length > 0 ? (
+            categories.map((cat: any) => (
+              <option key={cat.id} value={cat.id} className='bg-background text-foreground'>
+                {cat.name}
+              </option>
+            ))
+          ) : (
+            <option value='' className='bg-background text-foreground' disabled>
+              No categories available
+            </option>
+          )}
+        </select>
+        {errors.categoryId && (
+          <p className='py-1 text-xs text-red-500'>
+            {String(errors.categoryId.message || 'Category is required')}
+          </p>
+        )}
+      </div>
+      <div>
+        <Label
           htmlFor='tags'
-          className='text-sm font-medium text-foreground dark:text-foreground'
+          className='text-sm font-medium text-foreground'
         >
           Tags (comma-separated)
         </Label>
         <Input
           id='tags'
           placeholder='vegetarian, spicy, gluten-free'
-          className='mt-2 bg-background/50 border-white/10 text-white'
+          className='mt-2 bg-background/50 border-border text-foreground placeholder:text-muted-foreground'
           {...register('tags')}
         />
       </div>

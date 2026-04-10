@@ -11,6 +11,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { ShoppingBag } from 'lucide-react';
+import OrderRow from './orderRow';
 
 interface Props {
   searchParams: { skip?: string; take?: string };
@@ -51,52 +53,42 @@ async function Page(props: Props) {
     <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
       <h1 className='text-3xl font-bold text-neutral-50'>Orders</h1>
 
-      <Table>
-        <TableCaption>A list of all your orders</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className='w-[150px]'>Meal</TableHead>
-            <TableHead className='w-[100px]'>Quantity</TableHead>
-            <TableHead className='w-[100px]'>Total</TableHead>
-            <TableHead className='w-[150px]'>Address</TableHead>
-            <TableHead className='w-[120px]'>Status</TableHead>
-            <TableHead className='w-[100px]'>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.length > 0 ? (
-            data.map((order: any) => (
-              <TableRow key={order.id}>
-                <TableCell className='font-medium text-white'>
-                  {order.Meal?.name || 'Unknown Meal'}
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  {order.quantity}
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  ${order.total}
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  {order.address}
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  {order.status || 'Pending'}
-                </TableCell>
-                {order.status === 'Completed' && (
-                  <TableCell className='font-medium text-white'>
-                    <Link href={`/dashboard/reviews/${order.Meal?.id}`}>
-                      <Button>Review</Button>
-                    </Link>
-                  </TableCell>
-                )}
-              </TableRow>
-            ))
-          ) :   null}
-        </TableBody>
-      </Table>
+      {data.length > 0 ? (
+        <Table>
+          <TableCaption>A list of all your orders</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className='w-[150px]'>Meal</TableHead>
+              <TableHead className='w-[100px]'>Quantity</TableHead>
+              <TableHead className='w-[100px]'>Total</TableHead>
+              <TableHead className='w-[150px]'>Address</TableHead>
+              <TableHead className='w-[120px]'>Status</TableHead>
+              <TableHead className='w-[150px]'>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((order: any) => (
+              <OrderRow key={order.id} order={order} />
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <div className='text-center py-16'>
+          <ShoppingBag className='w-16 h-16 text-zinc-600 mx-auto mb-4' />
+          <h3 className='text-xl font-bold text-white mb-2'>No orders yet</h3>
+          <p className='text-zinc-400 mb-6'>
+            Looks like you have not placed any orders yet. Browse our delicious
+            meals and make your first order today!
+          </p>
+          <Link href='/meals'>
+            <Button className='bg-[#ff4d00] hover:bg-[#ff7433] text-white'>
+              Browse Meals
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
 
 export default Page;
-

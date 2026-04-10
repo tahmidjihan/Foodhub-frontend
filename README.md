@@ -1,5 +1,19 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and update the values:
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_BACKEND` | Backend API URL | `http://localhost:3001` |
+
+For production, use `.env.production` or set the variable in your deployment platform.
+
 ## Getting Started
 
 First, run the development server:

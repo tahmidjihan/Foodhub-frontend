@@ -1,67 +1,224 @@
-import React from "react";
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+
+const slides = [
+  {
+    id: 1,
+    headline: 'Flavor Delivered To Your Door',
+    subheadline:
+      'Experience the best local kitchens and gourmet providers. Healthy, fresh, and delicious meals delivered in minutes.',
+    cta: 'Explore Meals',
+    ctaHref: '/meals',
+    ctaSecondary: 'View Providers',
+    ctaSecondaryHref: '/providers',
+    gradient: 'from-black/80 via-black/50 to-transparent',
+    bgImage:
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=80',
+  },
+  {
+    id: 2,
+    headline: 'Premium Local Kitchens',
+    subheadline:
+      'Discover top-rated chefs and home cooks in your area. From gourmet pasta to authentic street food.',
+    cta: 'Browse Kitchens',
+    ctaHref: '/providers',
+    ctaSecondary: 'Become a Provider',
+    ctaSecondaryHref: '/auth/register',
+    gradient: 'from-black/80 via-black/50 to-transparent',
+    bgImage:
+      'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1920&q=80',
+  },
+  {
+    id: 3,
+    headline: 'Fresh Ingredients, Fast Delivery',
+    subheadline:
+      'Quality meals prepared with locally sourced ingredients, delivered to your doorstep in under 30 minutes.',
+    cta: 'Order Now',
+    ctaHref: '/meals',
+    ctaSecondary: 'See How It Works',
+    ctaSecondaryHref: '/#how-it-works',
+    gradient: 'from-black/80 via-black/50 to-transparent',
+    bgImage:
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1920&q=80',
+  },
+  {
+    id: 4,
+    headline: 'Join Thousands of Happy Foodies',
+    subheadline:
+      'Over 10,000 customers trust FoodHub for their daily meals. Join our growing community today.',
+    cta: 'Sign Up Free',
+    ctaHref: '/auth/register',
+    ctaSecondary: 'Learn More',
+    ctaSecondaryHref: '/about',
+    gradient: 'from-black/80 via-black/50 to-transparent',
+    bgImage:
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1920&q=80',
+  },
+];
 
 const Hero = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const goToSlide = useCallback((index: number) => {
+    setCurrentSlide(index);
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  }, []);
+
+  // Auto-play
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, nextSlide]);
+
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/hero-bg.png" // We will need to move the generated image to public/hero-bg.png
-          alt="Gourmet Food"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-      </div>
+    <section className='relative max-h-[70vh] min-h-[60vh] flex items-center overflow-hidden'>
+      {/* Background Images */}
+      {slides.map((slide, index) => (
+        <div
+          key={slide.id}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            index === currentSlide ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div
+            className='absolute inset-0 bg-cover bg-center'
+            style={{ backgroundImage: `url(${slide.bgImage})` }}
+          />
+          <div
+            className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`}
+          />
+        </div>
+      ))}
 
-      <div className="container mx-auto px-6 relative z-10 text-white">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">
-            Flavor Delivered <br />
-            <span className="text-primary">To Your Door</span>
-          </h1>
-          <p className="text-lg md:text-xl text-zinc-300 mb-8 max-w-lg">
-            Experience the best local kitchens and gourmet providers. 
-            Healthy, fresh, and delicious meals delivered in minutes.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-grow max-w-md">
-              <input 
-                type="text" 
-                placeholder="Enter your delivery address..." 
-                className="w-full py-4 px-6 rounded-full bg-white text-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xl"
-              />
-              <button className="absolute right-2 top-1.5 bg-primary text-white p-2.5 rounded-full hover:bg-primary-light transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
+      {/* Content */}
+      <div className='relative z-10 max-w-7xl mx-auto px-4 text-white w-full'>
+        <div className='max-w-2xl'>
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`transition-all duration-700 ${
+                index === currentSlide
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-8 absolute pointer-events-none'
+              }`}
+            >
+              {index === currentSlide && (
+                <>
+                  <h1 className='text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-4'>
+                    {slide.headline.split(' ').slice(0, -1).join(' ')}{' '}
+                    <br />
+                    <span className='text-[#ff4d00]'>
+                      {slide.headline.split(' ').slice(-1)}
+                    </span>
+                  </h1>
+                  <p className='text-base md:text-lg text-zinc-300 mb-8 max-w-lg'>
+                    {slide.subheadline}
+                  </p>
+                  <div className='flex flex-col sm:flex-row gap-4'>
+                    <Link
+                      href={slide.ctaHref}
+                      className='bg-[#ff4d00] hover:bg-[#ff7433] text-white font-bold py-3.5 px-8 rounded-full text-center transition-all shadow-lg hover:shadow-[#ff4d00]/30'
+                    >
+                      {slide.cta}
+                    </Link>
+                    <Link
+                      href={slide.ctaSecondaryHref}
+                      className='border-2 border-white/30 hover:border-white/60 text-white font-bold py-3.5 px-8 rounded-full text-center transition-all backdrop-blur-sm'
+                    >
+                      {slide.ctaSecondary}
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
-            <button className="btn-primary !shadow-2xl">
-              Explore Food
-            </button>
-          </div>
+          ))}
 
-          <div className="mt-12 flex items-center gap-6">
-            <div className="flex -space-x-3">
+          {/* User Social Proof */}
+          <div className='mt-12 flex items-center gap-4'>
+            <div className='flex -space-x-3'>
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-zinc-800 overflow-hidden">
-                   <div className="w-full h-full bg-primary/20 flex items-center justify-center text-[10px] font-bold">U{i}</div>
+                <div
+                  key={i}
+                  className='w-10 h-10 rounded-full border-2 border-white bg-zinc-700 overflow-hidden flex items-center justify-center text-xs font-bold'
+                >
+                  {String.fromCharCode(64 + i)}
                 </div>
               ))}
             </div>
-            <p className="text-sm font-medium">
-              Join <span className="text-primary">10,000+</span> happy food lovers
+            <p className='text-sm font-medium'>
+              Join <span className='text-[#ff4d00] font-bold'>10,000+</span>{' '}
+              happy food lovers
             </p>
           </div>
         </div>
       </div>
-      
-      {/* Decorative element */}
-      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-primary/20 blur-[120px] rounded-full"></div>
+
+      {/* Controls */}
+      <div className='absolute z-20 bottom-8 left-0 right-0 flex items-center justify-between px-4 max-w-7xl mx-auto'>
+        {/* Dots */}
+        <div className='flex gap-2'>
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                goToSlide(index);
+                setIsAutoPlaying(false);
+                setTimeout(() => setIsAutoPlaying(true), 10000);
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? 'w-8 bg-[#ff4d00]'
+                  : 'w-2 bg-white/40 hover:bg-white/60'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Arrows */}
+        <div className='flex gap-2'>
+          <button
+            onClick={() => {
+              prevSlide();
+              setIsAutoPlaying(false);
+              setTimeout(() => setIsAutoPlaying(true), 10000);
+            }}
+            className='w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors'
+            aria-label='Previous slide'
+          >
+            <ChevronLeft className='w-5 h-5' />
+          </button>
+          <button
+            onClick={() => {
+              nextSlide();
+              setIsAutoPlaying(false);
+              setTimeout(() => setIsAutoPlaying(true), 10000);
+            }}
+            className='w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors'
+            aria-label='Next slide'
+          >
+            <ChevronRight className='w-5 h-5' />
+          </button>
+        </div>
+      </div>
+
+      {/* Scroll Down Indicator */}
+      <div className='absolute z-20 bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce'>
+        <span className='text-xs text-white/60'>Scroll to explore</span>
+        <ChevronDown className='w-5 h-5 text-white/60' />
+      </div>
     </section>
   );
 };

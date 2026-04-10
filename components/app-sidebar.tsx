@@ -96,6 +96,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   ];
   const adminItems = [
     {
+      name: 'Dashboard',
+      url: '/dashboard',
+      icon: Frame,
+      role: 'Admin',
+    },
+    {
       name: 'Manage Users',
       url: '/dashboard/admin/users',
       icon: Users,
@@ -111,6 +117,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       name: 'Manage Categories',
       url: '/dashboard/admin/categories',
       icon: Grid3X3,
+      role: 'Admin',
+    },
+    {
+      name: 'View Providers',
+      url: '/providers',
+      icon: User,
       role: 'Admin',
     },
   ];

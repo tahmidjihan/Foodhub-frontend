@@ -1,53 +1,123 @@
-import React from "react";
+'use client';
 
-const foods = [
-  { name: "Truffle Pasta", kitchen: "The Italian Corner", price: "$24.00", rating: "4.9", image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=800" },
-  { name: "Double Wagyu Burger", kitchen: "Burger Bar HQ", price: "$18.50", rating: "4.8", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800" },
-  { name: "Omakase Sushi Set", kitchen: "Tokyo Zen", price: "$45.00", rating: "5.0", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800" },
-  { name: "Quinoa Power Bowl", kitchen: "Green Leaf", price: "$16.00", rating: "4.7", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800" },
-];
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { getMeals, type Meal } from '@/lib/api';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Star, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 const FeatureGrid = () => {
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'trending' | 'newest'>('newest');
+
+  useEffect(() => {
+    setLoading(true);
+    getMeals({
+      take: 4,
+      sortBy: filter === 'newest' ? undefined : 'price',
+      sortOrder: filter === 'trending' ? 'desc' : 'desc',
+    }).then((res) => {
+      if (res.data) setMeals(res.data);
+      setLoading(false);
+    });
+  }, [filter]);
+
   return (
-    <section id="order" className="py-20">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+    <section className='py-20 bg-zinc-50 dark:bg-zinc-950'>
+      <div className='max-w-7xl mx-auto px-4'>
+        <div className='flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4'>
           <div>
-            <span className="text-primary font-bold tracking-widest uppercase text-sm">Deliciously Selected</span>
-            <h2 className="text-4xl md:text-5xl font-black mt-2">Popular Dishes</h2>
+            <span className='text-[#ff4d00] font-bold tracking-widest uppercase text-sm'>
+              Deliciously Selected
+            </span>
+            <h2 className='text-3xl md:text-5xl font-black mt-2'>
+              Popular Dishes
+            </h2>
           </div>
-          <div className="flex gap-2">
-             <button className="px-6 py-2 rounded-full border border-zinc-200 dark:border-zinc-700 font-bold hover:border-primary transition-colors">Trending</button>
-             <button className="px-6 py-2 rounded-full bg-dark text-white font-bold">Newest</button>
+          <div className='flex gap-2'>
+            <button
+              onClick={() => setFilter('newest')}
+              className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
+                filter === 'newest'
+                  ? 'bg-dark dark:bg-white text-white dark:text-dark'
+                  : 'border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-[#ff4d00]'
+              }`}
+            >
+              Newest
+            </button>
+            <button
+              onClick={() => setFilter('trending')}
+              className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
+                filter === 'trending'
+                  ? 'bg-dark dark:bg-white text-white dark:text-dark'
+                  : 'border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-[#ff4d00]'
+              }`}
+            >
+              Trending
+            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {foods.map((food, idx) => (
-            <div key={idx} className="group cursor-pointer">
-              <div className="relative h-64 mb-6 rounded-[2rem] overflow-hidden card-hover">
-                <img 
-                  src={food.image} 
-                  alt={food.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute top-4 right-4 glass px-3 py-1 rounded-full flex items-center gap-1">
-                   <span className="text-yellow-500">★</span>
-                   <span className="text-xs font-bold text-dark">{food.rating}</span>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                   <button className="w-full btn-primary !py-2">Add to Cart</button>
-                </div>
+        {loading ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'>
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <div key={idx} className='group'>
+                <Skeleton className='h-64 rounded-[2rem] mb-4' />
+                <Skeleton className='w-32 h-5 mb-2' />
+                <Skeleton className='w-24 h-4' />
               </div>
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{food.name}</h3>
-                  <p className="text-zinc-500 text-sm">{food.kitchen}</p>
+            ))}
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'>
+            {meals.map((meal) => (
+              <Link key={meal.id} href={`/meals/${meal.id}`} className='group cursor-pointer'>
+                <div className='relative h-64 mb-6 rounded-[2rem] overflow-hidden card-hover'>
+                  <Image
+                    src={meal.image}
+                    alt={meal.name}
+                    fill
+                    className='object-cover transition-transform duration-700 group-hover:scale-110'
+                  />
+                  <div className='absolute top-4 right-4 bg-white/90 dark:bg-dark/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1'>
+                    <Star className='w-3.5 h-3.5 text-yellow-400 fill-yellow-400' />
+                    <span className='text-xs font-bold text-dark'>
+                      {meal.avgRating || '4.8'}
+                    </span>
+                  </div>
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6'>
+                    <button className='w-full bg-[#ff4d00] hover:bg-[#ff7433] text-white py-2.5 rounded-full font-bold transition-colors'>
+                      View Details
+                    </button>
+                  </div>
                 </div>
-                <p className="text-xl font-black text-primary">{food.price}</p>
-              </div>
-            </div>
-          ))}
+                <div className='flex justify-between items-start'>
+                  <div>
+                    <h3 className='text-lg font-bold group-hover:text-[#ff4d00] transition-colors line-clamp-1'>
+                      {meal.name}
+                    </h3>
+                    <p className='text-zinc-500 text-sm'>
+                      {meal.Category?.name || meal.type}
+                    </p>
+                  </div>
+                  <p className='text-lg font-black text-[#ff4d00]'>
+                    ${meal.price.toFixed(2)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        <div className='text-center mt-12'>
+          <Link
+            href='/meals'
+            className='inline-flex items-center gap-2 bg-[#ff4d00] hover:bg-[#ff7433] text-white font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-[#ff4d00]/30'
+          >
+            Explore All Meals <ArrowRight className='w-5 h-5' />
+          </Link>
         </div>
       </div>
     </section>
