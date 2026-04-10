@@ -142,7 +142,7 @@ export default function MealClient({ data, error, initialFilters, total }: MealC
   const [categories, setCategories] = useState<any[]>([]);
   const [sortBy, setSortBy] = useState(initialFilters.sortBy || '');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | ''>(
-    initialFilters.sortOrder || ''
+    (initialFilters.sortOrder as 'asc' | 'desc' | '') || ''
   );
   const [searchQuery, setSearchQuery] = useState(initialFilters.search || '');
   const [showFilters, setShowFilters] = useState(false);
@@ -394,7 +394,7 @@ export default function MealClient({ data, error, initialFilters, total }: MealC
 
       {/* Loading Skeletons */}
       {loading ? (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center'>
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <MealSkeleton key={i} />
           ))}
@@ -403,7 +403,7 @@ export default function MealClient({ data, error, initialFilters, total }: MealC
         <>
           {/* Meals Grid - 4 per row on desktop */}
           {filteredData.length > 0 ? (
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center'>
               {filteredData.map((item: any) => (
                 <MealCard key={item.id} item={item} />
               ))}

@@ -52,7 +52,7 @@ function AboutPage() {
             </p>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center'>
             <Card className='bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-all'>
               <CardContent className='pt-6'>
                 <div className='w-12 h-12 bg-[#ff4d00]/10 rounded-xl flex items-center justify-center mb-4'>
@@ -155,7 +155,7 @@ function AboutPage() {
       {/* Stats Section */}
       <section className='py-16 px-4 sm:px-6 lg:px-8 bg-zinc-900/30'>
         <div className='max-w-7xl mx-auto'>
-          <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-6 place-items-center'>
             <div className='text-center'>
               <div className='w-16 h-16 bg-[#ff4d00]/10 rounded-full flex items-center justify-center mx-auto mb-4'>
                 <ChefHat className='w-8 h-8 text-[#ff4d00]' />
@@ -212,7 +212,7 @@ function AboutPage() {
             </p>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 place-items-center'>
             <Card className='bg-zinc-900/50 border-zinc-800'>
               <CardContent className='pt-6 text-center'>
                 <div className='w-24 h-24 rounded-full bg-zinc-800 mx-auto mb-4 flex items-center justify-center'>

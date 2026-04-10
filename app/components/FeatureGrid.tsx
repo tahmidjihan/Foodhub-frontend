@@ -61,7 +61,7 @@ const FeatureGrid = () => {
         </div>
 
         {loading ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center'>
             {Array.from({ length: 4 }).map((_, idx) => (
               <div key={idx} className='group'>
                 <Skeleton className='h-64 rounded-[2rem] mb-4' />
@@ -71,7 +71,7 @@ const FeatureGrid = () => {
             ))}
           </div>
         ) : (
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center'>
             {meals.map((meal) => (
               <Link key={meal.id} href={`/meals/${meal.id}`} className='group cursor-pointer'>
                 <div className='relative h-64 mb-6 rounded-[2rem] overflow-hidden card-hover'>

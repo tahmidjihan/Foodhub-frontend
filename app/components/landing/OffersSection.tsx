@@ -61,7 +61,7 @@ const OffersSection = () => {
         </div>
 
         {loading ? (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center'>
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className='rounded-2xl bg-white dark:bg-zinc-900 p-6 md:p-8'>
                 <Skeleton className='h-14 w-14 rounded-xl mb-6' />
@@ -72,7 +72,7 @@ const OffersSection = () => {
             ))}
           </div>
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center'>
             {offers.map((offer) => (
               <div
                 key={offer.id}

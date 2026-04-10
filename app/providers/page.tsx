@@ -28,7 +28,7 @@ interface Props {
 }
 
 async function Page(props: Props) {
-  const { searchParams } = await props;
+  const searchParams = await props.searchParams;
   const { skip = '0', take = '10' } = searchParams;
   const pagination = {
     skip: Math.max(0, parseInt(skip) || 0),

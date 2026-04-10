@@ -115,7 +115,7 @@ const StatisticsSection = () => {
         </div>
 
         {loading ? (
-          <div className='grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
+          <div className='grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 place-items-center'>
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className='text-center'>
                 <Skeleton className='h-12 w-12 rounded-full mx-auto mb-4 bg-white/20' />
@@ -125,7 +125,7 @@ const StatisticsSection = () => {
             ))}
           </div>
         ) : (
-          <div className='grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
+          <div className='grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 place-items-center'>
             {stats.map((stat, idx) => (
               <div key={idx} className='text-center'>
                 <div className='text-4xl md:text-5xl mb-3 md:mb-4'>{stat.icon}</div>

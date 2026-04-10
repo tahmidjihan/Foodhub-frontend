@@ -48,7 +48,7 @@ const HowItWorksSection = () => {
           </p>
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center'>
           {steps.map((step, idx) => (
             <div key={idx} className='relative text-center'>
               {/* Connector Line */}

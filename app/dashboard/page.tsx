@@ -87,7 +87,7 @@ function DashboardHome() {
     return (
       <div className='space-y-6'>
         {/* Stats cards skeleton */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center'>
           {[...Array(4)].map((_, i) => (
             <Card key={i} className='bg-zinc-900/50 border-zinc-800'>
               <CardContent className='pt-6'>
@@ -99,16 +99,16 @@ function DashboardHome() {
         </div>
 
         {/* Charts skeleton */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 place-items-center'>
           <Card className='bg-zinc-900/50 border-zinc-800'>
             <CardContent className='pt-6'>
               <Skeleton className='h-64 w-full bg-zinc-800' />
-            </Card>
+            </CardContent>
           </Card>
           <Card className='bg-zinc-900/50 border-zinc-800'>
             <CardContent className='pt-6'>
               <Skeleton className='h-64 w-full bg-zinc-800' />
-            </Card>
+            </CardContent>
           </Card>
         </div>
 
@@ -142,7 +142,7 @@ function DashboardHome() {
   return (
     <div className='space-y-6'>
       {/* Overview Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center'>
         <Card className='bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-all'>
           <CardContent className='pt-6'>
             <div className='flex items-center justify-between'>
@@ -209,7 +209,7 @@ function DashboardHome() {
       </div>
 
       {/* Charts */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 place-items-center'>
         {/* Line/Bar Chart - Order Trends */}
         <Card className='bg-zinc-900/50 border-zinc-800'>
           <CardHeader>

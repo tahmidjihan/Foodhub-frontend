@@ -34,7 +34,7 @@ export interface Meal {
   image: string;
   tags: string[];
   description: string;
-  type: string;
+  type: 'veg' | 'non-veg' | 'vegan' | 'other';
   providerId: string;
   categoryId: string;
   Category?: Category;
@@ -86,6 +86,7 @@ export interface DashboardStats {
   completedOrders: number;
   cancelledOrders: number;
   pendingOrders: number;
+  inProgressOrders: number;
   totalMeals: number;
   totalProviders: number;
   totalCustomers: number;

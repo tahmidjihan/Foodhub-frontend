@@ -59,8 +59,8 @@ function Form({ isLogin }: { isLogin?: boolean }) {
   const callbackURL =
     typeof window !== 'undefined'
       ? window.location.origin + '/dashboard'
-      : process.env.NEXT_PUBLIC_BACKEND
-        ? `${process.env.NEXT_PUBLIC_BACKEND.replace('3001', '5000')}/dashboard`
+      : process.env.NEXT_PUBLIC_FRONTEND_URL
+        ? `${process.env.NEXT_PUBLIC_FRONTEND_URL}/dashboard`
         : 'http://localhost:5000/dashboard';
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -206,23 +206,21 @@ function Form({ isLogin }: { isLogin?: boolean }) {
         )}
 
         {/* Social Login (Google) */}
-        {isLogin && (
-          <>
-            <Separator className='my-4 bg-zinc-700' />
-            <div className='space-y-2'>
-              <p className='text-xs text-center text-zinc-500'>Or continue with</p>
-              <Button
-                type='button'
-                variant='outline'
-                className='w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white'
-                onClick={handleGoogleSignIn}
-              >
-                <GoogleIcon />
-                Sign in with Google
-              </Button>
-            </div>
-          </>
-        )}
+        <>
+          <Separator className='my-4 bg-zinc-700' />
+          <div className='space-y-2'>
+            <p className='text-xs text-center text-zinc-500'>Or continue with</p>
+            <Button
+              type='button'
+              variant='outline'
+              className='w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white'
+              onClick={handleGoogleSignIn}
+            >
+              <GoogleIcon />
+              {isLogin ? 'Sign in' : 'Sign up'} with Google
+            </Button>
+          </div>
+        </>
 
         <form onSubmit={handleSubmit(onSubmit)} className='mt-6 space-y-4'>
           {!isLogin && (

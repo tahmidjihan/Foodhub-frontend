@@ -83,7 +83,7 @@ const Hero = () => {
   }, [isAutoPlaying, nextSlide]);
 
   return (
-    <section className='relative max-h-[70vh] min-h-[60vh] flex items-center overflow-hidden'>
+    <section className='relative h-[70vh] min-h-[500px] flex items-center overflow-hidden py-12'>
       {/* Background Images */}
       {slides.map((slide, index) => (
         <div
@@ -116,14 +116,14 @@ const Hero = () => {
             >
               {index === currentSlide && (
                 <>
-                  <h1 className='text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-4'>
+                  <h1 className='text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6'>
                     {slide.headline.split(' ').slice(0, -1).join(' ')}{' '}
                     <br />
                     <span className='text-[#ff4d00]'>
                       {slide.headline.split(' ').slice(-1)}
                     </span>
                   </h1>
-                  <p className='text-base md:text-lg text-zinc-300 mb-8 max-w-lg'>
+                  <p className='text-base md:text-lg text-zinc-300 mb-10 max-w-lg leading-relaxed'>
                     {slide.subheadline}
                   </p>
                   <div className='flex flex-col sm:flex-row gap-4'>
@@ -146,7 +146,7 @@ const Hero = () => {
           ))}
 
           {/* User Social Proof */}
-          <div className='mt-12 flex items-center gap-4'>
+          <div className='mt-16 flex items-center gap-4'>
             <div className='flex -space-x-3'>
               {[1, 2, 3, 4].map((i) => (
                 <div

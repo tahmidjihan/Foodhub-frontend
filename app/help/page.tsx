@@ -174,8 +174,8 @@ function HelpPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const categories = Array.from(
-    new Set(faqData.map((item) => item.category))
+  const categories: string[] = Array.from(
+    new Set(faqData.map((item) => item.category).filter((c): c is string => !!c))
   );
 
   const filteredFaqs = faqData.filter((faq) => {
