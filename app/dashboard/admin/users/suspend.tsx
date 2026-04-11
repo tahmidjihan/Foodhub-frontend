@@ -8,7 +8,7 @@ function Suspend({ id }: { id: string }) {
     <>
       <Button
         onClick={() => {
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users/${id}`, {
+          fetch(`/api/admin/users/${id}`, {
             method: 'PUT',
             credentials: 'include',
             headers: {

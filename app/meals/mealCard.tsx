@@ -19,7 +19,7 @@ function MealCard({ item }: any) {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
+      const res = await fetch(`/api/cart`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

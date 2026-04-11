@@ -35,7 +35,7 @@ function Page() {
   });
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart/${orderId}`, {
+    fetch(`/api/cart/${orderId}`, {
       credentials: 'include',
     })
       .then((res) => res.json())
@@ -51,7 +51,7 @@ function Page() {
       address: data.address,
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/orders`, {
+    fetch(`/api/orders`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -62,7 +62,7 @@ function Page() {
       .then((res) => {
         if (res.ok) {
           toast.success('Order placed successfully!');
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart/${orderId}`, {
+          fetch(`/api/cart/${orderId}`, {
             method: 'DELETE',
             credentials: 'include',
           });

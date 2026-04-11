@@ -1,15 +1,20 @@
 import { createAuthClient } from 'better-auth/react';
 
-const getBaseUrl = () => {
+// Auth requests must go through the frontend's catch-all API route (/api/[...path]/route.ts)
+// so cookies are scoped to the frontend domain. The catch-all route proxies to the backend
+// and rewrites Set-Cookie headers to use the frontend domain.
+const getAuthBaseUrl = () => {
   if (typeof window !== 'undefined') {
-    // Use backend URL for auth API calls
-    return process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3001';
+    return window.location.origin;
   }
-  return process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3001';
+  // SSR: use env var or fallback - this path is only used for hooks which are client-side
+  return process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000';
 };
 
+const baseURL = `${getAuthBaseUrl()}/api/auth`;
+
 export const authClient = createAuthClient({
-  baseURL: `${getBaseUrl()}/api/auth`,
+  baseURL,
   fetchOptions: {
     credentials: 'include',
   },

@@ -27,19 +27,28 @@ const TestimonialsSection = () => {
       try {
         // Get reviews from a sample of meals or from a dedicated endpoint
         // For now, we'll check if we have any reviews to display
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/review?limit=10`);
+        const response = await fetch(`/api/review?limit=10`, {
+          credentials: 'include',
+        });
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
-            const formatted = data.map((review: Review & { Meal?: { name: string } }) => ({
-              id: review.id,
-              name: review.User?.name || 'Customer',
-              role: 'Verified Customer',
-              avatar: (review.User?.name || 'C').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase(),
-              content: review.description,
-              rating: review.rating || 5,
-              meal: review.Meal?.name || 'Delicious Meal',
-            }));
+            const formatted = data.map(
+              (review: Review & { Meal?: { name: string } }) => ({
+                id: review.id,
+                name: review.User?.name || 'Customer',
+                role: 'Verified Customer',
+                avatar: (review.User?.name || 'C')
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase(),
+                content: review.description,
+                rating: review.rating || 5,
+                meal: review.Meal?.name || 'Delicious Meal',
+              }),
+            );
             setTestimonials(formatted);
           }
         }
@@ -55,19 +64,19 @@ const TestimonialsSection = () => {
 
   const next = () => {
     setCurrent((prev) =>
-      prev + visibleCount >= testimonials.length ? 0 : prev + 1
+      prev + visibleCount >= testimonials.length ? 0 : prev + 1,
     );
   };
 
   const prev = () => {
     setCurrent((prev) =>
-      prev - 1 < 0 ? Math.max(0, testimonials.length - visibleCount) : prev - 1
+      prev - 1 < 0 ? Math.max(0, testimonials.length - visibleCount) : prev - 1,
     );
   };
 
   const visibleTestimonials = testimonials.slice(
     current,
-    current + visibleCount
+    current + visibleCount,
   );
 
   // Don't render section if no real testimonials and not loading
@@ -93,7 +102,10 @@ const TestimonialsSection = () => {
         {loading ? (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 place-items-center'>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className='bg-white dark:bg-zinc-900 rounded-2xl p-6 lg:p-8'>
+              <div
+                key={i}
+                className='bg-white dark:bg-zinc-900 rounded-2xl p-6 lg:p-8'
+              >
                 <Skeleton className='h-4 w-24 mb-4' />
                 <Skeleton className='h-20 w-full mb-6' />
                 <div className='flex items-center gap-3'>
@@ -136,13 +148,20 @@ const TestimonialsSection = () => {
                       {testimonial.avatar}
                     </div>
                     <div>
-                      <p className='font-bold text-sm text-zinc-900 dark:text-zinc-100'>{testimonial.name}</p>
-                      <p className='text-zinc-500 text-xs'>{testimonial.role}</p>
+                      <p className='font-bold text-sm text-zinc-900 dark:text-zinc-100'>
+                        {testimonial.name}
+                      </p>
+                      <p className='text-zinc-500 text-xs'>
+                        {testimonial.role}
+                      </p>
                     </div>
                   </div>
                   <div className='mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800'>
                     <p className='text-xs text-zinc-500 dark:text-zinc-400'>
-                      Favorite: <span className='text-[#ff4d00] font-semibold'>{testimonial.meal}</span>
+                      Favorite:{' '}
+                      <span className='text-[#ff4d00] font-semibold'>
+                        {testimonial.meal}
+                      </span>
                     </p>
                   </div>
                 </div>

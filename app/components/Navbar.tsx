@@ -61,7 +61,7 @@ const Navbar = () => {
   // Fetch cart count
   useEffect(() => {
     if (user) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
+      fetch(`/api/cart`, {
         credentials: 'include',
       })
         .then((res) => res.json())

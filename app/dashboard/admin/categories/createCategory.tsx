@@ -19,17 +19,13 @@ function CreateCategory() {
 
   const onSubmit: SubmitHandler<CategoryFormData> = async (data) => {
     try {
-      // Get cookies from the browser
-      const cookieString = document.cookie;
-      
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/categories`,
+        `/api/categories`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Cookie': cookieString,
           },
           credentials: 'include',
           body: JSON.stringify(data),

@@ -1,128 +1,245 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+'use client';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, AlertCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Users,
+  AlertCircle,
+  LayoutDashboard,
+  ShoppingBag,
+  FolderTree,
+  UserCog,
+  ArrowRight,
+  Shield,
+  TrendingUp,
+} from 'lucide-react';
 import Link from 'next/link';
-import Suspend from './suspend';
-import Activate from './activate';
+import { useEffect, useState } from 'react';
 
-export const dynamic = 'force-dynamic';
+interface AdminStats {
+  totalUsers: number;
+  totalProviders: number;
+  totalCustomers: number;
+  activeUsers: number;
+  suspendedUsers: number;
+  totalOrders: number;
+  totalCategories: number;
+}
 
-export default async function AdminUsersPage() {
-  let users: any[] = [];
-  let error: string | null = null;
+export default function AdminDashboardPage() {
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users`,
-      {
-        credentials: 'include',
-        cache: 'no-store',
-      },
-    );
-    if (res.ok) {
-      const data = await res.json();
-      users = Array.isArray(data) ? data : [];
-    } else {
-      error = 'Failed to fetch users';
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const res = await fetch('/api/admin/stats', {
+          credentials: 'include',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        } else {
+          setStats(null);
+        }
+      } catch {
+        setStats(null);
+      } finally {
+        setLoading(false);
+      }
     }
-  } catch (err) {
-    console.error('Error fetching users:', err);
-    error = 'Error connecting to server';
-  }
+
+    fetchStats();
+  }, []);
+
+  const dashboardSections = [
+    {
+      title: 'User Management',
+      description: 'Manage all users, providers, and customers',
+      icon: Users,
+      href: '/dashboard/admin/users/list',
+      color: '#ff4d00',
+      stats: stats
+        ? `${stats.totalUsers} total • ${stats.activeUsers} active`
+        : 'View all users',
+    },
+    {
+      title: 'Orders Overview',
+      description: 'Monitor and manage all platform orders',
+      icon: ShoppingBag,
+      href: '/dashboard/admin/orders',
+      color: '#10b981',
+      stats: stats ? `${stats.totalOrders} orders` : 'View all orders',
+    },
+    {
+      title: 'Categories',
+      description: 'Manage meal categories and classifications',
+      icon: FolderTree,
+      href: '/dashboard/admin/categories',
+      color: '#3b82f6',
+      stats: stats ? `${stats.totalCategories} categories` : 'Manage categories',
+    },
+  ];
+
+  const quickStats = [
+    {
+      label: 'Total Users',
+      value: stats?.totalUsers ?? '-',
+      icon: Users,
+      color: '#ff4d00',
+    },
+    {
+      label: 'Providers',
+      value: stats?.totalProviders ?? '-',
+      icon: UserCog,
+      color: '#3b82f6',
+    },
+    {
+      label: 'Active Users',
+      value: stats?.activeUsers ?? '-',
+      icon: TrendingUp,
+      color: '#10b981',
+    },
+    {
+      label: 'Suspended',
+      value: stats?.suspendedUsers ?? '-',
+      icon: Shield,
+      color: '#ef4444',
+    },
+  ];
 
   return (
-    <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
-      <div className='flex justify-between items-center'>
-        <h1 className='text-3xl font-bold text-neutral-50'>Admin - Users</h1>
+    <div className='py-6 space-y-8 mx-auto max-w-7xl w-full'>
+      {/* Header */}
+      <div className='space-y-2'>
+        <div className='flex items-center gap-3'>
+          <div className='w-10 h-10 rounded-xl bg-[#ff4d00]/10 flex items-center justify-center'>
+            <Shield className='w-5 h-5 text-[#ff4d00]' />
+          </div>
+          <h1 className='text-2xl sm:text-3xl font-bold text-white'>
+            Admin Dashboard
+          </h1>
+        </div>
+        <p className='text-zinc-400'>
+          Manage your platform, users, and orders from one central hub
+        </p>
       </div>
 
-      {error && (
-        <div className='bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center'>
-          <AlertCircle className='w-12 h-12 text-red-500 mx-auto mb-4' />
-          <p className='text-red-400'>{error}</p>
-          <p className='text-zinc-500 text-sm mt-2'>Please try refreshing the page</p>
-        </div>
-      )}
-
-      {!error && users.length > 0 ? (
-        <Table>
-          <TableCaption>A list of all users in the system</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='w-[250px]'>Name</TableHead>
-              <TableHead className='w-[250px]'>Email</TableHead>
-              <TableHead className='w-[100px]'>Role</TableHead>
-              <TableHead className='w-[100px]'>Status</TableHead>
-              <TableHead className='w-[150px]'>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((user: any) => (
-              <TableRow key={user.id}>
-                <TableCell className='font-medium text-white'>
-                  {user.name}
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  {user.email}
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      user.role === 'Provider'
-                        ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-green-500/20 text-green-400'
-                    }`}
-                  >
-                    {user.role}
-                  </span>
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      user.isActive
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-red-500/20 text-red-400'
-                    }`}
-                  >
-                    {user.isActive ? 'Active' : 'Suspended'}
-                  </span>
-                </TableCell>
-                <TableCell className='font-medium text-white'>
-                  <div className='flex gap-2'>
-                    {user.isActive == true ? (
-                      <Suspend id={user.id} />
-                    ) : (
-                      <Activate id={user.id} />
-                    )}
+      {/* Quick Stats */}
+      <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+        {loading
+          ? [...Array(4)].map((_, i) => (
+              <Card key={i} className='bg-zinc-900/50 border-zinc-800'>
+                <CardContent className='p-4'>
+                  <Skeleton className='h-4 w-20 bg-zinc-800 mb-2' />
+                  <Skeleton className='h-8 w-16 bg-zinc-800' />
+                </CardContent>
+              </Card>
+            ))
+          : quickStats.map((stat) => (
+              <Card
+                key={stat.label}
+                className='bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-colors'
+              >
+                <CardContent className='p-4'>
+                  <div className='flex items-center justify-between'>
+                    <div>
+                      <p className='text-xs text-zinc-500 mb-1'>{stat.label}</p>
+                      <p className='text-xl sm:text-2xl font-bold text-white'>
+                        {stat.value}
+                      </p>
+                    </div>
+                    <div
+                      className='w-10 h-10 rounded-lg flex items-center justify-center'
+                      style={{ backgroundColor: `${stat.color}15` }}
+                    >
+                      <stat.icon
+                        className='w-5 h-5'
+                        style={{ color: stat.color }}
+                      />
+                    </div>
                   </div>
-                </TableCell>
-              </TableRow>
+                </CardContent>
+              </Card>
             ))}
-          </TableBody>
-        </Table>
-      ) : (
-        !error && (
-          <div className='text-center py-16 bg-zinc-900/50 border border-zinc-800 rounded-xl'>
-            <Users className='w-16 h-16 text-zinc-600 mx-auto mb-4' />
-            <h3 className='text-xl font-bold text-white mb-2'>No users found</h3>
-            <p className='text-zinc-400 mb-6'>
-              There are no users registered in the system yet.
-            </p>
+      </div>
+
+      {/* Main Sections Grid */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+        {dashboardSections.map((section) => (
+          <Link key={section.title} href={section.href} className='group'>
+            <Card className='h-full bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 transition-all group-hover:translate-y-[-2px]'>
+              <CardHeader className='pb-3'>
+                <div className='flex items-start justify-between'>
+                  <div
+                    className='w-12 h-12 rounded-xl flex items-center justify-center'
+                    style={{ backgroundColor: `${section.color}15` }}
+                  >
+                    <section.icon
+                      className='w-6 h-6'
+                      style={{ color: section.color }}
+                    />
+                  </div>
+                  <ArrowRight className='w-5 h-5 text-zinc-600 group-hover:text-[#ff4d00] transition-colors' />
+                </div>
+              </CardHeader>
+              <CardContent className='space-y-2'>
+                <CardTitle className='text-lg text-white group-hover:text-[#ff4d00] transition-colors'>
+                  {section.title}
+                </CardTitle>
+                <p className='text-sm text-zinc-500'>{section.description}</p>
+                <p className='text-xs text-zinc-600 pt-2 border-t border-zinc-800/50 mt-3'>
+                  {section.stats}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+
+      {/* System Status / Info */}
+      <Card className='bg-zinc-900/30 border-zinc-800/50'>
+        <CardHeader className='pb-3'>
+          <CardTitle className='text-white flex items-center gap-2 text-base'>
+            <LayoutDashboard className='w-4 h-4 text-[#ff4d00]' />
+            Quick Actions
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='flex flex-wrap gap-3'>
             <Link href='/dashboard'>
-              <Button className='bg-[#ff4d00] hover:bg-[#ff7433] text-white'>
-                Back to Dashboard
+              <Button
+                variant='outline'
+                size='sm'
+                className='border-zinc-700 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-800 hover:text-white'
+              >
+                <LayoutDashboard className='w-4 h-4 mr-2' />
+                Main Dashboard
+              </Button>
+            </Link>
+            <Link href='/meals'>
+              <Button
+                variant='outline'
+                size='sm'
+                className='border-zinc-700 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-800 hover:text-white'
+              >
+                <ShoppingBag className='w-4 h-4 mr-2' />
+                Browse Meals
               </Button>
             </Link>
           </div>
-        )
+        </CardContent>
+      </Card>
+
+      {error && (
+        <div className='bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center gap-3'>
+          <AlertCircle className='w-5 h-5 text-red-500 shrink-0' />
+          <p className='text-red-400 text-sm'>{error}</p>
+        </div>
       )}
     </div>
   );

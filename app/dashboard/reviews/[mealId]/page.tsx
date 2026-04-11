@@ -26,7 +26,7 @@ function Page() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/review`, {
+      const res = await fetch(`/api/review`, {
         method: 'POST',
         credentials: 'include',
         headers: {

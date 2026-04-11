@@ -15,7 +15,7 @@ function TR({ item }: any) {
     setUpdating(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/cart/${item.id}`,
+        `/api/cart/${item.id}`,
         {
           method: 'PATCH',
           credentials: 'include',
@@ -39,7 +39,7 @@ function TR({ item }: any) {
   async function deleteCartItem() {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/cart/${item.id}`,
+        `/api/cart/${item.id}`,
         {
           method: 'DELETE',
           credentials: 'include',

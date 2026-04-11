@@ -20,6 +20,7 @@ async function Page(props: Props) {
   const cookieStore = await cookies();
   let data: any[] = [];
   let error: string | null = null;
+  let isUnauthorized = false;
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
@@ -28,9 +29,15 @@ async function Page(props: Props) {
       },
       cache: 'no-store',
     });
-    if (res.ok) {
+
+    if (res.status === 401) {
+      isUnauthorized = true;
+      error = 'Please log in to view your cart';
+    } else if (res.ok) {
       const responseData = await res.json();
-      data = Array.isArray(responseData) ? responseData : [];
+      data = Array.isArray(responseData)
+        ? responseData
+        : responseData.data || [];
     } else {
       error = 'Failed to fetch cart items';
     }
@@ -38,6 +45,21 @@ async function Page(props: Props) {
     console.error('Error fetching cart:', err);
     error = 'Error connecting to server';
     data = [];
+  }
+
+  if (isUnauthorized) {
+    return (
+      <div className='p-8 space-y-6 mx-auto max-w-7xl w-full'>
+        <div className='bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 text-center'>
+          <p className='text-yellow-400'>{error}</p>
+          <Link href='/auth/login'>
+            <button className='mt-4 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md'>
+              Log In
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (

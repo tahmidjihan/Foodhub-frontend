@@ -13,7 +13,7 @@ function MealRow({ item }: { item: any }) {
 
   async function deleteMeal() {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/meals/${item.id}`,
+      `/api/providers/meals/${item.id}`,
       {
         method: 'DELETE',
         credentials: 'include',

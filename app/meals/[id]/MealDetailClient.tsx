@@ -1,7 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Star, ShoppingCart, UtensilsCrossed, Tag, User, Share2, Check } from 'lucide-react';
+import {
+  Star,
+  ShoppingCart,
+  UtensilsCrossed,
+  Tag,
+  User,
+  Share2,
+  Check,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +25,12 @@ interface MealDetails {
   type: string;
   providerId: string;
   categoryId: string;
-  Category?: { id: string; name: string; image: string | null; createdAt: string };
+  Category?: {
+    id: string;
+    name: string;
+    image: string | null;
+    createdAt: string;
+  };
   provider?: { id: string; name: string; image: string | null };
   avgRating?: number;
   reviewCount?: number;
@@ -51,7 +64,7 @@ export default function MealDetailClient({ meal, reviews }: MealCardProps) {
   async function addToCart() {
     setIsAdding(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
+      const res = await fetch(`/api/cart`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -75,7 +88,11 @@ export default function MealDetailClient({ meal, reviews }: MealCardProps) {
     const url = window.location.href;
     if (navigator.share) {
       try {
-        await navigator.share({ title: meal.name, text: meal.description, url });
+        await navigator.share({
+          title: meal.name,
+          text: meal.description,
+          url,
+        });
       } catch {
         // User cancelled share
       }
@@ -177,7 +194,9 @@ export default function MealDetailClient({ meal, reviews }: MealCardProps) {
                               </p>
                               {review.createdAt && (
                                 <p className='text-xs text-zinc-500'>
-                                  {new Date(review.createdAt).toLocaleDateString()}
+                                  {new Date(
+                                    review.createdAt,
+                                  ).toLocaleDateString()}
                                 </p>
                               )}
                             </div>

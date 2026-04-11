@@ -32,7 +32,7 @@ function OrderRow({ order }: { order: any }) {
     setCancelling(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/orders/${order.id}`,
+        `/api/orders/${order.id}`,
         {
           method: 'DELETE',
           credentials: 'include',

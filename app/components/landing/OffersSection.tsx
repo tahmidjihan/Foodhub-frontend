@@ -23,7 +23,9 @@ const OffersSection = () => {
     const fetchOffers = async () => {
       try {
         // Check if there's an offers/promotions endpoint
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/offers?active=true`);
+        const response = await fetch(`/api/offers?active=true`, {
+          credentials: 'include',
+        });
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -63,7 +65,10 @@ const OffersSection = () => {
         {loading ? (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center'>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className='rounded-2xl bg-white dark:bg-zinc-900 p-6 md:p-8'>
+              <div
+                key={i}
+                className='rounded-2xl bg-white dark:bg-zinc-900 p-6 md:p-8'
+              >
                 <Skeleton className='h-14 w-14 rounded-xl mb-6' />
                 <Skeleton className='h-6 w-3/4 mb-2' />
                 <Skeleton className='h-4 w-full mb-6' />
@@ -82,7 +87,9 @@ const OffersSection = () => {
                 <div className={`h-2 bg-gradient-to-r ${offer.gradient}`} />
 
                 <div className='p-6 md:p-8'>
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${offer.gradient} flex items-center justify-center mb-6`}>
+                  <div
+                    className={`w-14 h-14 rounded-xl bg-gradient-to-r ${offer.gradient} flex items-center justify-center mb-6`}
+                  >
                     <offer.icon className='w-7 h-7 text-white' />
                   </div>
 
@@ -95,12 +102,16 @@ const OffersSection = () => {
 
                   <div className='flex items-center justify-between flex-wrap gap-2'>
                     <div className='flex items-center gap-2'>
-                      <span className='text-xs text-zinc-500 dark:text-zinc-400'>Code:</span>
+                      <span className='text-xs text-zinc-500 dark:text-zinc-400'>
+                        Code:
+                      </span>
                       <span className='font-mono font-bold text-sm bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-lg text-zinc-900 dark:text-zinc-100'>
                         {offer.code}
                       </span>
                     </div>
-                    <span className='text-xs text-zinc-400 dark:text-zinc-500'>{offer.expiry}</span>
+                    <span className='text-xs text-zinc-400 dark:text-zinc-500'>
+                      {offer.expiry}
+                    </span>
                   </div>
 
                   <Link

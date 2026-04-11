@@ -11,11 +11,11 @@ import { Toaster } from 'sonner';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='dark min-h-screen'>
+    <div className='dark min-h-screen bg-zinc-950'>
       <Toaster />
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset>
+        <SidebarInset className='px-4 sm:px-6 lg:px-8'>
           <Header />
           {children}
         </SidebarInset>

@@ -16,7 +16,7 @@ const STATUSES = ['Pending', 'InProgress', 'Completed', 'Cancelled'];
 function OrderRow({ item }: { item: any }) {
   async function updateStatus(status: string) {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/orders/${item.id}`,
+      `/api/providers/orders/${item.id}`,
       {
         method: 'PATCH',
         credentials: 'include',

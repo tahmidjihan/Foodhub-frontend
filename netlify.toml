@@ -1,0 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NEXT_PUBLIC_FRONTEND_URL = "https://foodhub-by-tahmid.netlify.app"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Only proxy auth requests to backend (better-auth client calls /api/auth/*)
+[[redirects]]
+  from = "/api/auth/*"
+  to = "https://foodhub-backend-lilac.vercel.app/api/auth/:splat"
+  status = 200
+  force = true
+
+# All other /api/* requests are handled by Next.js API routes
+# in /app/api/[...path]/route.ts which forward cookies properly

@@ -1,10 +1,15 @@
 /**
  * FoodHub API Client Layer
  * Provides typed, reusable functions for all API calls
+ *
+ * IMPORTANT: Uses relative `/api/*` paths which are:
+ * - In development: proxied via next.config.ts rewrites to backend
+ * - In production: proxied via Netlify redirects to backend
+ * This ensures cookies (scoped to frontend domain) are forwarded correctly
  */
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3001';
+// Use relative path - will be proxied to backend
+const API_BASE = '';
 
 // ============= Types =============
 
@@ -125,9 +130,10 @@ export interface ApiResponse<T> {
 
 async function fetchApi<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<ApiResponse<T>> {
-  const url = `${BACKEND_URL}/api${endpoint}`;
+  // Use relative path - will be proxied to backend
+  const url = `${API_BASE}/api${endpoint}`;
 
   const defaultHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -192,12 +198,14 @@ export async function getMeals(params?: {
   return fetchApi<Meal[]>(`/meals${query ? `?${query}` : ''}`);
 }
 
-export async function getMealById(id: string): Promise<ApiResponse<MealDetails>> {
+export async function getMealById(
+  id: string,
+): Promise<ApiResponse<MealDetails>> {
   return fetchApi<MealDetails>(`/meals/${id}`);
 }
 
 export async function getMealsByProvider(
-  providerId: string
+  providerId: string,
 ): Promise<ApiResponse<Meal[]>> {
   return fetchApi<Meal[]>(`/meals/provider/${providerId}`);
 }
@@ -234,7 +242,7 @@ export async function getCart(): Promise<ApiResponse<CartItem[]>> {
 
 export async function addToCart(
   mealId: string,
-  quantity: number = 1
+  quantity: number = 1,
 ): Promise<ApiResponse<CartItem>> {
   return fetchApi<CartItem>('/cart', {
     method: 'POST',
@@ -244,7 +252,7 @@ export async function addToCart(
 
 export async function updateCartItem(
   itemId: string,
-  quantity: number
+  quantity: number,
 ): Promise<ApiResponse<CartItem>> {
   return fetchApi<CartItem>(`/cart/${itemId}`, {
     method: 'PATCH',
@@ -253,7 +261,7 @@ export async function updateCartItem(
 }
 
 export async function removeFromCart(
-  itemId: string
+  itemId: string,
 ): Promise<ApiResponse<void>> {
   return fetchApi<void>(`/cart/${itemId}`, {
     method: 'DELETE',
@@ -263,7 +271,7 @@ export async function removeFromCart(
 // ============= Reviews API =============
 
 export async function getMealReviews(
-  mealId: string
+  mealId: string,
 ): Promise<ApiResponse<Review[]>> {
   return fetchApi<Review[]>(`/review/meal/${mealId}`);
 }
@@ -281,20 +289,26 @@ export async function createReview(data: {
 
 // ============= Dashboard API =============
 
-export async function getDashboardStats(): Promise<ApiResponse<DashboardStats>> {
+export async function getDashboardStats(): Promise<
+  ApiResponse<DashboardStats>
+> {
   return fetchApi<DashboardStats>('/dashboard/stats');
 }
 
-export async function getDashboardChartData(): Promise<ApiResponse<ChartDataPoint[]>> {
+export async function getDashboardChartData(): Promise<
+  ApiResponse<ChartDataPoint[]>
+> {
   return fetchApi<ChartDataPoint[]>('/dashboard/chart-data');
 }
 
-export async function getDashboardStatusDistribution(): Promise<ApiResponse<StatusDistribution[]>> {
+export async function getDashboardStatusDistribution(): Promise<
+  ApiResponse<StatusDistribution[]>
+> {
   return fetchApi<StatusDistribution[]>('/dashboard/status-distribution');
 }
 
 export async function getRecentOrders(
-  limit: number = 5
+  limit: number = 5,
 ): Promise<ApiResponse<Order[]>> {
   return fetchApi<Order[]>(`/dashboard/recent-orders?limit=${limit}`);
 }
@@ -306,7 +320,7 @@ export async function getProviders(): Promise<ApiResponse<ProviderProfile[]>> {
 }
 
 export async function getProviderById(
-  id: string
+  id: string,
 ): Promise<ApiResponse<ProviderProfile>> {
   return fetchApi<ProviderProfile>(`/providers/${id}`);
 }
@@ -332,13 +346,13 @@ export async function getCurrentUser(): Promise<ApiResponse<User>> {
 // ============= Meal Details & Related =============
 
 export async function getMealDetails(
-  id: string
+  id: string,
 ): Promise<ApiResponse<MealDetails>> {
   return fetchApi<MealDetails>(`/meals/${id}`);
 }
 
 export async function getRelatedMeals(
-  mealId: string
+  mealId: string,
 ): Promise<ApiResponse<Meal[]>> {
   return fetchApi<Meal[]>(`/meals/${mealId}/related`);
 }
@@ -350,7 +364,7 @@ export async function getUserReviews(): Promise<ApiResponse<Review[]>> {
 }
 
 export async function getProviderMeals(
-  providerId: string
+  providerId: string,
 ): Promise<ApiResponse<Meal[]>> {
   return fetchApi<Meal[]>(`/meals/provider/${providerId}`);
 }

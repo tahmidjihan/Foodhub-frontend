@@ -41,7 +41,7 @@ export default function PlaceOrderPage() {
   });
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
+    fetch(`/api/cart`, {
       credentials: 'include',
     })
       .then((res) => res.json())
@@ -72,7 +72,7 @@ export default function PlaceOrderPage() {
     try {
       // Place orders for each cart item
       const orderPromises = cartItems.map((item) =>
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/orders`, {
+        fetch(`/api/orders`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
@@ -92,7 +92,7 @@ export default function PlaceOrderPage() {
         // Clear cart after successful orders
         await Promise.all(
           cartItems.map((item) =>
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart/${item.id}`, {
+            fetch(`/api/cart/${item.id}`, {
               method: 'DELETE',
               credentials: 'include',
             })

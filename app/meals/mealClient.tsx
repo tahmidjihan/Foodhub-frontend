@@ -12,7 +12,14 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, Star, ShoppingCart, ArrowUpDown } from 'lucide-react';
 import Link from 'next/link';
@@ -37,7 +44,7 @@ function MealCard({ item }: { item: any }) {
   async function addToCart(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/cart`, {
+    fetch(`/api/cart`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -93,7 +100,10 @@ function MealCard({ item }: { item: any }) {
               {item.type}
             </Badge>
             {item.Category && (
-              <Badge variant='outline' className='border-zinc-700 text-zinc-400'>
+              <Badge
+                variant='outline'
+                className='border-zinc-700 text-zinc-400'
+              >
                 {item.Category.name}
               </Badge>
             )}
@@ -135,14 +145,19 @@ function MealSkeleton() {
   );
 }
 
-export default function MealClient({ data, error, initialFilters, total }: MealClientProps) {
+export default function MealClient({
+  data,
+  error,
+  initialFilters,
+  total,
+}: MealClientProps) {
   const [loading, setLoading] = useState(true);
   const [preference, setPreference] = useState(initialFilters.type || 'both');
   const [category, setCategory] = useState(initialFilters.category || 'all');
   const [categories, setCategories] = useState<any[]>([]);
   const [sortBy, setSortBy] = useState(initialFilters.sortBy || '');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | ''>(
-    (initialFilters.sortOrder as 'asc' | 'desc' | '') || ''
+    (initialFilters.sortOrder as 'asc' | 'desc' | '') || '',
   );
   const [searchQuery, setSearchQuery] = useState(initialFilters.search || '');
   const [showFilters, setShowFilters] = useState(false);
@@ -150,9 +165,9 @@ export default function MealClient({ data, error, initialFilters, total }: MealC
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND}/api/categories`
-        );
+        const response = await fetch(`/api/categories`, {
+          credentials: 'include',
+        });
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -189,7 +204,7 @@ export default function MealClient({ data, error, initialFilters, total }: MealC
       filtered = filtered.filter(
         (item) =>
           item.name.toLowerCase().includes(query) ||
-          item.description.toLowerCase().includes(query)
+          item.description.toLowerCase().includes(query),
       );
     }
 
@@ -442,7 +457,7 @@ export default function MealClient({ data, error, initialFilters, total }: MealC
                       <PaginationPrevious
                         href={`?skip=${Math.max(
                           0,
-                          pagination.skip - pagination.take
+                          pagination.skip - pagination.take,
                         )}&take=${pagination.take}${category !== 'all' ? `&category=${category}` : ''}${searchQuery ? `&search=${searchQuery}` : ''}${preference !== 'both' ? `&type=${preference}` : ''}${sortBy ? `&sortBy=${sortBy}` : ''}${sortOrder ? `&sortOrder=${sortOrder}` : ''}`}
                       />
                     </PaginationItem>

@@ -19,7 +19,7 @@ function MealForm({
   const [categoriesLoading, setCategoriesLoading] = React.useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/categories`)
+    fetch(`/api/categories`)
       .then((res) => res.json())
       .then((data) => {
         setCategories(Array.isArray(data) ? data : []);
@@ -74,7 +74,7 @@ function MealForm({
 
     if (isEdit) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/meals/${mealId}`,
+        `/api/providers/meals/${mealId}`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -90,7 +90,7 @@ function MealForm({
       }
     } else {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/providers/meals`,
+        `/api/providers/meals`,
         {
           method: 'POST',
           credentials: 'include',

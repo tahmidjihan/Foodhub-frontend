@@ -7,7 +7,7 @@ function DeleteCategory({ id }: any) {
     <>
       <Button
         onClick={() => {
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/categories/${id}`, {
+          fetch(`/api/categories/${id}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {

@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import React from 'react';
 import { toast } from 'sonner';
@@ -7,7 +9,7 @@ function Activate({ id }: { id: string }) {
     <>
       <Button
         onClick={() => {
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/admin/users/${id}`, {
+          fetch(`/api/admin/users/${id}`, {
             method: 'PUT',
             credentials: 'include',
             headers: {
